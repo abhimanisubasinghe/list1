@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { ImageBackground, StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native'
 import {H1} from 'native-base'
+import AwesomeAlert from 'react-native-awesome-alerts'
 
 import bgImage from '../../assets/login.jpeg'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
@@ -44,8 +45,40 @@ class Auth extends Component {
                 },
                 touched : false
             },
-        }
+        },
+        errorAlert: false,
+        successAlert: false
     }
+
+    showErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+              errorAlert: true
+          }
+        })
+      }
+    
+      hideErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+              errorAlert: false
+          }
+        })
+      }
+    
+    showSuccessAlert = () => {
+    this.setState(prevState => {
+        return{
+            successAlert: true
+        }
+    })
+    }
+
+    hideSuccessAlert = (prevState => {
+    return{
+        successAlert: false
+    }
+    })  
 
     updateMode = () => {
         this.setState(prevState => {
@@ -101,9 +134,10 @@ class Auth extends Component {
             }
             if(this.state.controls.contactNo.valid === true && this.state.controls.password.valid === true){
                 alert('Pass')
+                this.props.navigation.navigate('Drawer')
             }
             else{
-                alert('Validation error')
+               this.showErrorAlert()
             }
         }
         else{
@@ -114,19 +148,16 @@ class Auth extends Component {
             }
             if(this.state.controls.contactNo.valid === true && this.state.controls.password.valid === true && this.state.controls.userName === true && this.state.controls.confirmPassword.valid === true){
                 alert('Pass')
+                this.props.navigation.navigate('Drawer')
             }
             else{
-                alert('Validation error')
-                console.log('contactNo',this.state.controls.contactNo.valid)
-                console.log('pwd',this.state.controls.password.valid)
-                console.log('conPwd',this.state.controls.confirmPassword.valid)
-                console.log('userName',this.state.controls.userName.valid)
+                this.showErrorAlert()
             }
         }
     }
 
     render(){
-
+        const {errorAlert} = this.state;
         let userName = null
         let confirmPassword = null
         let heading = <Text style={styles.heading}>Login</Text>
@@ -163,7 +194,7 @@ class Auth extends Component {
                 <KeyboardAvoidingView behavior='bottom'>
                 <View style={styles.form}>
                     {heading}
-                    <DefaultButton color='purple' onPress={() => this.updateMode()}>
+                    <DefaultButton color='#6a3982' onPress={() => this.updateMode()}>
                         {this.state.mode === 'login' ? <Text style={styles.subHeading}> Switch to SignUP </Text> : <Text style={styles.subHeading}> Switch to Login </Text>}
                     </DefaultButton>
                     {userName}
@@ -185,10 +216,28 @@ class Auth extends Component {
                         secureTextEntry
                     />
                     {confirmPassword}
-                    <DefaultButton style={styles.submitButton} color='purple' onPress = {() => this.submitHandler()}>
+                    <DefaultButton style={styles.submitButton} color='#6a3982' onPress = {() => this.submitHandler()}>
                         Submit
                     </DefaultButton>    
                 </View>
+                <AwesomeAlert
+                show={errorAlert}
+                useNativeDriver = {true}
+                showProgress={false}
+                contentContainerStyle={styles.errorMsg}
+                titleStyle={styles.titleStyle}
+                messageStyle={styles.messageStyle}
+                title="Error!"
+                message="Validation Error, Try Again!"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showConfirmButton={true}
+                confirmText="Ok"
+                confirmButtonColor="#DD6B55"
+                onConfirmPressed={() => {
+                    this.hideErrorAlert()
+                }}
+                />
                 </KeyboardAvoidingView>
             </ImageBackground>    
         )
@@ -236,7 +285,19 @@ const styles = StyleSheet.create({
     submitButton:{
         color: 'black',
         //borderRadius: 1
-    } 
+    },
+    errorMsg: {
+        backgroundColor: 'rgba(237, 199, 192,0.9)',
+        fontStyle: 'normal',
+        color: 'black'
+    } ,
+    titleStyle: {
+        color: 'black',
+        fontWeight: 'bold'
+    },
+    messageStyle:{
+        color: '#262626'
+    }
 })
 
 export default Auth

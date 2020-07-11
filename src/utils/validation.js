@@ -31,7 +31,7 @@ const emailValidator = val => {
 }
 
 const phoneNumberValidator = val => {
-    const re = /^7|0|(?:\+94)[0-9]{9,10}$/
+    const re = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/
     return re.test(String(val))
 }
 
