@@ -7,7 +7,7 @@ import PickImage from '../../components/PickImage/PickImage'
 import validate from '../../utils/validation'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 
-class ShareProduct extends Component {
+class AddProduct extends Component {
 
     state ={
         controls: {
@@ -215,6 +215,6 @@ const styles = StyleSheet.create({
 //     }
 // }
 
-//export default connect(mapStateToProps, mapDispatchToProps) (ShareProduct);
+//export default connect(mapStateToProps, mapDispatchToProps) (AddProduct);
 
-export default ShareProduct;
+export default AddProduct;

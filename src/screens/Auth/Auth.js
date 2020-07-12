@@ -1,23 +1,25 @@
 import React, {Component} from 'react'
-import { ImageBackground, StyleSheet, View, Text, KeyboardAvoidingView } from 'react-native'
+import { ImageBackground, StyleSheet, View, Text, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import {H1} from 'native-base'
 import AwesomeAlert from 'react-native-awesome-alerts'
+import {connect} from 'react-redux' 
 
 import bgImage from '../../assets/login.jpeg'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 import DefaultButton from '../../components/UI/DefaultButton/DefaultButton'
 import validate from '../../utils/validation'
+import {tryAuth, authAutoSignIn } from '../../store/actions/index'
 
 class Auth extends Component {
 
     state = {
         mode: 'login',
         controls: {
-            contactNo: {
+            email: {
                 value: "",
                 valid: false,  
                 validationRules:{
-                    isPhone: true
+                    isEmail: true
                 },
                 touched : false
             },
@@ -129,12 +131,11 @@ class Auth extends Component {
     submitHandler = () => {
         if(this.state.mode === 'login'){
             const loginData = {
-                contactNo : this.state.controls.contactNo,
-                password: this.state.controls.password
+                email : this.state.controls.email.value,
+                password: this.state.controls.password.value
             }
-            if(this.state.controls.contactNo.valid === true && this.state.controls.password.valid === true){
-                alert('Pass')
-                this.props.navigation.navigate('Drawer')
+            if(this.state.controls.email.valid === true && this.state.controls.password.valid === true){
+                this.props.onAuth(loginData,this.props,this.state.mode)
             }
             else{
                this.showErrorAlert()
@@ -142,16 +143,19 @@ class Auth extends Component {
         }
         else{
             const signupData = {
-                contactNo : this.state.controls.contactNo,
-                password: this.state.controls.password,
-                userName: this.state.controls.userName,
+                email : this.state.controls.email.value,
+                password: this.state.controls.password.value,
+                userName: this.state.controls.userName.value,
             }
-            if(this.state.controls.contactNo.valid === true && this.state.controls.password.valid === true && this.state.controls.userName === true && this.state.controls.confirmPassword.valid === true){
-                alert('Pass')
-                this.props.navigation.navigate('Drawer')
+            if(this.state.controls.email.valid === true && this.state.controls.password.valid === true && this.state.controls.userName.valid === true && this.state.controls.confirmPassword.valid === true){
+                this.props.onAuth(signupData,this.props,this.state.mode)
             }
             else{
                 this.showErrorAlert()
+                console.log(this.state.controls.email.valid)
+                console.log(this.state.controls.password.valid)
+                console.log(this.state.controls.userName.valid)
+                console.log( this.state.controls.confirmPassword.valid)
             }
         }
     }
@@ -161,6 +165,16 @@ class Auth extends Component {
         let userName = null
         let confirmPassword = null
         let heading = <Text style={styles.heading}>Login</Text>
+
+        let submitButton = (
+        <DefaultButton style={styles.submitButton} color='#6a3982' onPress = {() => this.submitHandler()}>
+            Submit
+        </DefaultButton>  
+        )
+
+        if(this.props.isLoading){
+            submitButton = <ActivityIndicator/>
+        }
 
         if(this.state.mode === 'signup'){
             heading = (
@@ -199,12 +213,12 @@ class Auth extends Component {
                     </DefaultButton>
                     {userName}
                     <DefaultInput
-                        placeholder='Contact number'
+                        placeholder='Email'
                         style={styles.input}
-                        value={this.state.controls.contactNo.value}
-                        onChangeText = {(val) => this.updateInputState('contactNo',val)}
-                        valid = {this.state.controls.contactNo.valid}
-                        touched= {this.state.controls.contactNo.touched}
+                        value={this.state.controls.email.value}
+                        onChangeText = {(val) => this.updateInputState('email',val)}
+                        valid = {this.state.controls.email.valid}
+                        touched= {this.state.controls.email.touched}
                     />
                     <DefaultInput
                         placeholder='Password'
@@ -216,9 +230,7 @@ class Auth extends Component {
                         secureTextEntry
                     />
                     {confirmPassword}
-                    <DefaultButton style={styles.submitButton} color='#6a3982' onPress = {() => this.submitHandler()}>
-                        Submit
-                    </DefaultButton>    
+                    {submitButton}
                 </View>
                 <AwesomeAlert
                 show={errorAlert}
@@ -300,4 +312,17 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Auth
+const mapStateToProps = state => {
+    return{
+        isLoading: state.ui.isLoading
+    }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: (authData,nav,authMode) => dispatch(tryAuth(authData,nav,authMode)),
+        onAutoSignIn: (nav) => dispatch(authAutoSignIn(nav)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (Auth);
