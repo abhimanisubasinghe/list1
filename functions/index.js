@@ -85,8 +85,8 @@ exports.storeImage = functions.https.onRequest((request, response) => {
 exports.deleteImage = functions.database
   .ref('/products/{productId}')
   .onDelete((event) => {
-    const placeData = event.data.previous.val();
-    const imagePath = placeData.imagePath;
+    const productData = event.data.previous.val();
+    const imagePath = productData.imagePath;
     const bucket = gcs.bucket('list1-9090.appspot.com');
     return bucket.file(imagePath).delete();
   });

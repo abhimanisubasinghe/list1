@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import {connect} from 'react-redux';
-//import {addPlace,  startAddPlace} from '../../store/actions/index'
+import {addProduct,  startAddProduct} from '../../store/actions/index'
 
 import PickImage from '../../components/PickImage/PickImage'
 import validate from '../../utils/validation'
@@ -103,9 +103,9 @@ class AddProduct extends Component {
 
     componentDidUpdate(){
         //console.log('test',this.props.navigation)
-        // if(this.props.placeAdded){
-        //     this.props.navigation.navigate('FindPlace')
-        //     this.props.onStartAddPlace()
+        // if(this.props.productAdded){
+        //     this.props.navigation.navigate('FindProduct')
+        //     this.props.onStartAddProduct()
         // }
     }
 
@@ -123,8 +123,8 @@ class AddProduct extends Component {
         })
     }
 
-    placeAddedHandler = () => {
-       // this.props.onAddPlace(this.state.controls.productName.value, this.state.controls.location.value, this.state.controls.image.value)
+    productAddedHandler = () => {
+        this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value)
         alert(`You added ${this.state.controls.productName.value}`)
         this.reset()
         this.imagePicker.reset()
@@ -137,21 +137,21 @@ class AddProduct extends Component {
         <Button 
         title='Add product' 
         color='black' 
-        onPress={this.placeAddedHandler}
+        onPress={this.productAddedHandler}
         disabled= {!this.state.controls.productName.valid}
         />
         )
 
-        // if(this.props.isLoading){
-        //     submitButton = <ActivityIndicator color='black'/>
-        // }
+        if(this.props.isLoading){
+            submitButton = <ActivityIndicator color='black'/>
+        }
 
         return (
             <ScrollView >
                 <View style={styles.container}>
                 <Text> Add your product </Text>
                 <DefaultInput
-                placeholder= 'Your product name'
+                palceholder= 'Your product name'
                 onChangeText= {this.productNameChangedHandler} 
                 value={this.state.controls.productName.value}
                 style={styles.inputField}
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10
     },  
-    placeholder:{
+    productholder:{
         borderWidth: 1,
         borderColor: "black",
         backgroundColor: '#eee',
@@ -201,20 +201,20 @@ const styles = StyleSheet.create({
     }
 })
 
-// const mapStateToProps = state => {
-//     return {
-//         isLoading: state.ui.isLoading,
-//         placeAdded: state.places.placeAdded
-//     }
-// }
+const mapStateToProps = state => {
+    return {
+        isLoading: state.ui.isLoading,
+        productAdded: state.products.productAdded
+    }
+}
 
-// const mapDispatchToProps = dispatch => {
-//     return{
-//         onAddPlace: (productName, location,image) => dispatch(addPlace(productName, location, image)),
-//         onStartAddPlace: () => dispatch(startAddPlace())
-//     }
-// }
+const mapDispatchToProps = dispatch => {
+    return{
+        onAddProduct: (productName, location,image) => dispatch(addProduct(productName, location, image)),
+        onStartAddProduct: () => dispatch(startAddProduct())
+    }
+}
 
-//export default connect(mapStateToProps, mapDispatchToProps) (AddProduct);
+export default connect(mapStateToProps, mapDispatchToProps) (AddProduct);
 
-export default AddProduct;
+// export default AddProduct;

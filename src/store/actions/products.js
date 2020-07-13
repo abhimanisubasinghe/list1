@@ -1,4 +1,3 @@
-import RNFetchBlob from 'rn-fetch-blob'
 import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
@@ -9,6 +8,7 @@ export const startAddProduct = () => {
 }
 
 export const addProduct = (productName, productDescription, image) => {
+    //console.log(productName, productDescription)
     return dispatch => {
       let authToken;
       dispatch(uiStartLoading());
@@ -17,9 +17,10 @@ export const addProduct = (productName, productDescription, image) => {
           alert("No valid token found!");
         })
         .then(token => {
+          //console.log('token',token)
           authToken = token;
           return fetch(
-            "https://us-central1-ciao-181108.cloudfunctions.net/storeImage",
+            "https://us-central1-list1-9090.cloudfunctions.net/storeImage",
             {
               method: "POST",
               body: JSON.stringify({
@@ -48,12 +49,12 @@ export const addProduct = (productName, productDescription, image) => {
         .then(parsedRes => {
           const productData = {
             name: productName,
-            location: productDescription,
+            description: productDescription,
             image: parsedRes.imageUrl,
             imagePath: parsedRes.imagePath
           };
           return fetch(
-            "https://ciao-181108.firebaseio.com/products.json?auth=" +
+            "https://list1-9090.firebaseio.com/products.json?auth=" +
               authToken,
             {
               method: "POST",
