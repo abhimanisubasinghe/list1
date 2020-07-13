@@ -1,21 +1,27 @@
 import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, ScrollView } from 'react-native';
 
-import ListItem from '../ListItem/ListItem';
+import ProductListItem from '../ProductListItem/ProductListItem';
 
-const productList = props => {
+import defaultImage from '../../assets/default.jpg'
+import ProductDetails from '../../screens/ProductDetails/ProductDetails';
+
+const productList = (props) => {
+    console.log('p',props)
     return (
         <FlatList 
         style={styles.listContainer}
         data= {props.products}
         renderItem={(info) => (
-            <ListItem 
-                placeName={info.item.name} 
-                placeImage= {info.item.image}
+            <ProductListItem 
+                productName={info.item.name} 
+                productImage= {info.item.image}
+                productDescription = {info.item.description}
+                productKey = {info.item.key}
                 onItemPressed = {() => props.onItemSelected(info.item.key)}
             />
         )}
-        />
+        /> 
     );
 };
 

@@ -149,9 +149,9 @@ class AddProduct extends Component {
         return (
             <ScrollView >
                 <View style={styles.container}>
-                <Text> Add your product </Text>
+                <Text style={styles.headerTitle}> Add your product </Text>
                 <DefaultInput
-                palceholder= 'Your product name'
+                placeholder= 'Your product name'
                 onChangeText= {this.productNameChangedHandler} 
                 value={this.state.controls.productName.value}
                 style={styles.inputField}
@@ -180,6 +180,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10
     },  
+    headerTitle: {
+      fontSize: 25,
+      textTransform: 'capitalize',
+      fontWeight: 'bold'
+    },
     productholder:{
         borderWidth: 1,
         borderColor: "black",

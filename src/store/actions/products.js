@@ -105,7 +105,7 @@ export const getProducts = () => {
     })
     .then(token =>{
         console.log(token)
-        return fetch('https://ciao-181108.firebaseio.com/products.json?auth='+token)
+        return fetch('https://list1-9090.firebaseio.com/products.json?auth='+token)
     })
     .then(res =>  {
       if(res.ok){
@@ -143,7 +143,9 @@ export const setProducts = (products) => {
         products: products
     }
 }
+
 export const deleteProduct = (key) => {
+  console.log(key)
     return (dispatch) => {
         dispatch(authGetToken())
         .catch(() =>{
@@ -151,12 +153,14 @@ export const deleteProduct = (key) => {
         })
         .then( token => {
             dispatch(removeProduct(key))
-            return fetch("https://ciao-181108.firebaseio.com/products/" + key + ".json?auth="+token, {
+            console.log('pass1')
+            return fetch("https://list1-9090.firebaseio.com/products/" + key + ".json?auth="+token, {
                 method: "DELETE"
             })
         })
         .then(res => {
           if(res.ok){
+
             return res.json()
           }
           else{

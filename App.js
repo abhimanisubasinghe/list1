@@ -13,6 +13,7 @@ function App() {
   return(
     <NavigationContainer>
       <RootStack.Navigator headerMode='none'>
+      
       <RootStack.Screen
         name='Login'
         component={Auth}
