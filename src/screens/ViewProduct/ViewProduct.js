@@ -22,9 +22,9 @@ class ViewProduct extends Component  {
          
      }
  
-    //  // componentWillUpdate(){
-    //  //     this.props.onLoadProducts()
-    //  // }
+    //  componentWillUpdate(){
+    //      this.props.onLoadProducts()
+    //  }
  
      productsLoadedHandler = () => {
          Animated.timing(this.state.productsAnim, {

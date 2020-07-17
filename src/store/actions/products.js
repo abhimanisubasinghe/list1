@@ -91,14 +91,6 @@ export const productAdded = () => {
 
 export const getProducts = () => {
     return (dispatch) =>{
-    //dispatch(uiStartLoading())
-    // const token = getState().auth.token
-    // //console.log(token)
-    // if(!token){
-    //     alert('Token validating failed')
-    //     return
-    // }
-
     dispatch(authGetToken())
     .catch(() =>{
         alert('No valid token found')
@@ -173,6 +165,50 @@ export const deleteProduct = (key) => {
         .catch(err => {
             alert("Something went wrong, sorry :/");
             console.log(err);
+        })        
+        
+    };
+};
+
+export const updateProduct = (key, productName, productDescription) => {
+  //console.log(key)
+    return (dispatch) => {
+        dispatch(uiStartLoading());
+        dispatch(authGetToken())
+        .catch(() =>{
+            alert('No valid token found')
+        })
+        .then( token => {
+            //dispatch(removeProduct(key))
+            console.log('pass1')
+            const productData = {
+              name: productName,
+              description: productDescription,
+            };
+            return fetch("https://list1-9090.firebaseio.com/products/" + key + ".json?auth="+token, {
+                method: "PATCH",
+                body: JSON.stringify(productData)
+            })
+        })
+        .then(res => {
+          if(res.ok){
+
+            return res.json()
+          }
+          else{
+            throw (new Error())
+          }
+        })
+        .then(parsedRes => {
+            console.log("Done!");
+            dispatch(uiStopLoading());
+            dispatch(getProducts());
+        })
+        .catch(err => {
+            alert("Something went wrong, sorry :/");
+            console.log(err);
+            dispatch(uiStopLoading());
+            
         })        
         
     };

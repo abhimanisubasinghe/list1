@@ -7,7 +7,13 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 
 import {deleteProduct } from '../../store/actions/index'
 
+import ProductUpdate from '../ProductUpdate/ProductUpdate'
+
 class productListItem  extends React.Component {
+
+    state = {
+        update : false
+    }
 
     productDeletedHandler = () => {   
         //const popAction = StackActions.pop(1);
@@ -18,13 +24,25 @@ class productListItem  extends React.Component {
 
     productUpdateHandler = () => {   
         //const popAction = StackActions.pop(1);
-        this.props.onDeleteProduct(this.props.productKey);
+        //this.props.onDeleteProduct(this.props.productKey);
         //this.props.navigation.dispatch(popAction);
+        this.setState(prevState => {
+            return {
+                update: prevState.update === true ? false : true
+            }
+        })
     }
 
     render(){
        // console.log(this.props)
+        let updateItem = null
+
+        if(this.state.update){
+            updateItem = <ProductUpdate product={this.props}/>
+        }
+
         return(
+            <View>
             <TouchableHighlight>
                 <View style={styles.container}>
                     <View style={styles.listItem}>
@@ -69,6 +87,8 @@ class productListItem  extends React.Component {
                     </View>
                 </View> 
             </TouchableHighlight>
+            {updateItem}
+            </View>
         )
     }
 

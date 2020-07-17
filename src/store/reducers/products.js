@@ -7,20 +7,6 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch(action.type){
-        // case ADD_PRODUCT:
-        //     return{
-        //         ...state,
-        //         products: state.products.concat({
-        //             key: Math.random(),
-        //             name: action.productName,
-        //             location: action.location,
-        //             image: {
-        //               uri: action.image.uri
-        //             }
-        //           }
-        //           )
-        //     }
-        
         case SET_PRODUCTS:
             return {
                 ...state,
