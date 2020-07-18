@@ -1,8 +1,9 @@
-import { DELETE_PRODUCT, SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT} from '../actions/actionType'
+import { DELETE_PRODUCT, SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, STOP_UPDATE_PRODUCT, START_UPDATE_PRODUCT} from '../actions/actionType'
 
 const initialState = {
     products: [],
-    productAdded: false
+    productAdded: false, 
+    productUpdating: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -24,6 +25,16 @@ const reducer = (state = initialState, action) => {
             return{
                 ...state,
                 productAdded: false
+            } 
+        case START_UPDATE_PRODUCT: 
+            return{
+                ...state,
+                productUpdating: true
+            }       
+        case STOP_UPDATE_PRODUCT: 
+            return{ 
+                ...state,
+                productUpdating: false
             }    
         case PRODUCT_ADDED: 
             return{

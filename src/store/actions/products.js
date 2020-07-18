@@ -1,4 +1,4 @@
-import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT} from './actionType'
+import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, START_UPDATE_PRODUCT, STOP_UPDATE_PRODUCT} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 export const startAddProduct = () => {
@@ -170,6 +170,18 @@ export const deleteProduct = (key) => {
     };
 };
 
+export const startUpdateProduct = () => {
+  return{
+    type: START_UPDATE_PRODUCT
+  }
+}
+
+export const stopUpdateProduct = () => {
+  return{
+    type: STOP_UPDATE_PRODUCT
+  }
+}
+
 export const updateProduct = (key, productName, productDescription) => {
   //console.log(key)
     return (dispatch) => {
@@ -197,17 +209,20 @@ export const updateProduct = (key, productName, productDescription) => {
           }
           else{
             throw (new Error())
+            //dispatch(stopUpdateProduct());
           }
         })
         .then(parsedRes => {
             console.log("Done!");
             dispatch(uiStopLoading());
             dispatch(getProducts());
+            dispatch(stopUpdateProduct());
         })
         .catch(err => {
             alert("Something went wrong, sorry :/");
             console.log(err);
             dispatch(uiStopLoading());
+            dispatch(stopUpdateProduct());
             
         })        
         
