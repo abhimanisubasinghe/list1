@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import {connect} from 'react-redux';
-import {addShop,  startAddShop} from '../../store/actions/index'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+//import {addShop,  startAddShop} from '../../store/actions/index'
 
-import PickImage from '../../components/PickImage/PickImage'
+import PickLocation from '../../components/PickLocation/PickLocation'
 import validate from '../../utils/validation'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
+
+const GOOGLE_PLACES_API_KEY = 'AIzaSyBcs4ko-dTv7DhkZWp0BbcTs0z2nodA4y8'; // never save your real api key in a snack!
+
 
 class AddShop extends Component {
 
@@ -29,10 +33,10 @@ class AddShop extends Component {
                     }
   
                   },
-                image: {
+                location: {
                     value: null,
                     valid: false
-                }
+                },
             }
     }
 
@@ -89,10 +93,10 @@ class AddShop extends Component {
                     }
   
                   },
-                image: {
+                location: {
                     value: null,
                     valid: false
-                }
+                },
             }
         })
     }
@@ -109,26 +113,25 @@ class AddShop extends Component {
         // }
     }
 
-    imagePickedHandler = image => {
-        this.setState(prevState => {
-            return{
-                controls: {
-                    ...prevState.controls,
-                    image:{
-                        value: image,
-                        valid: true 
-                    }
-                }
-            }
-        })
-    }
+    locationPickedHandler = location => {
+      this.setState(prevState => {
+          return{
+              controls: {
+                  ...prevState.controls,
+                  location: {
+                      value: location,
+                      valid: true
+                  }
+              }
+          }
+      })
+  }
 
     shopAddedHandler = () => {
-        this.props.onAddShop(this.state.controls.shopName.value, this.state.controls.shopDetail.value, this.state.controls.image.value)
+        //this.props.onAddShop(this.state.controls.shopName.value, this.state.controls.shopDetail.value, this.state.controls.image.value)
         alert(`You added ${this.state.controls.shopName.value}`)
         this.reset()
-        this.imagePicker.reset()
-        //this.locationPicker.reset()
+        this.locationPicker.reset()
     }
 
     render() {
@@ -142,20 +145,21 @@ class AddShop extends Component {
         />
         )
 
-        if(this.props.isLoading){
-            submitButton = <ActivityIndicator color='black'/>
-        }
+        // if(this.props.isLoading){
+        //     submitButton = <ActivityIndicator color='black'/>
+        // }
 
         return (
-            <ScrollView >
-                <View style={styles.container}>
+            
+              <View style={styles.container}>
                 <Text style={styles.headerTitle}> Add your shop </Text>
                 <DefaultInput
                 placeholder= 'Your shop name'
                 onChangeText= {this.shopNameChangedHandler} 
                 value={this.state.controls.shopName.value}
                 style={styles.inputField}
-                />    
+                />   
+               
                 <DefaultInput
                 placeholder= 'Your shop details'
                 onChangeText= {this.shopDetailChangedHandler} 
@@ -164,12 +168,12 @@ class AddShop extends Component {
                 style={styles.inputField}
                 value={this.state.controls.shopDetail.value}
                 />  
-                <PickImage onImagePick={this.imagePickedHandler} ref={ref => this.imagePicker = ref}/>
+                <PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref}/>
                 <View style={styles.button}>
                     {submitButton}
                 </View>
                 </View>
-            </ScrollView>
+    
         )
     }
 }
@@ -178,8 +182,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ecf0f1',
         padding: 10
     },  
+    placeInput: {
+      width: '100%'
+    },
     headerTitle: {
       fontSize: 25,
       textTransform: 'capitalize',
@@ -206,20 +215,20 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = state => {
-    return {
-        isLoading: state.ui.isLoading,
-        shopAdded: state.shops.shopAdded
-    }
-}
+// const mapStateToProps = state => {
+//     return {
+//         isLoading: state.ui.isLoading,
+//         shopAdded: state.shops.shopAdded
+//     }
+// }
 
-const mapDispatchToProps = dispatch => {
-    return{
-        onAddShop: (shopName, location,image) => dispatch(AddShop(shopName, location, image)),
-        onStartAddShop: () => dispatch(startAddShop())
-    }
-}
+// const mapDispatchToProps = dispatch => {
+//     return{
+//         onAddShop: (shopName, location,image) => dispatch(AddShop(shopName, location, image)),
+//         onStartAddShop: () => dispatch(startAddShop())
+//     }
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps) (AddShop);
+// export default connect(mapStateToProps, mapDispatchToProps) (AddShop);
 
-// export default AddShop;
+export default AddShop;
