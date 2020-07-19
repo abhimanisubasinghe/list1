@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import AddShop from '../AddShop/AddShop'
 import ViewShops from '../ViewShops/ViewShops'
-import Test from '../AddShop/test'
 
 class Shops extends Component {
     render(){
@@ -32,10 +31,7 @@ class Shops extends Component {
               </Tab>
               <Tab heading="Add" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
                 <AddShop/>
-              </Tab> 
-              <Tab heading="Test" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
-                <Test/>
-              </Tab>        
+              </Tab>         
             </Tabs>
             </Container>    
         )
@@ -44,7 +40,7 @@ class Shops extends Component {
 
 const styles = StyleSheet.create({
     header:{
-        color: 'purple'
+        //backgroundColor: 'purple'
     }
 })
 

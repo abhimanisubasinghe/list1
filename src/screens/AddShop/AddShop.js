@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput,  StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { Container, Header, Left, Body, Right, Title, Button, Subtitle ,  Tab, Tabs, ScrollableTab } from 'native-base';
+import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
-//import {addShop,  startAddShop} from '../../store/actions/index'
+import Geocoder from 'react-native-geocoding';
 
+//import {addShop,  startAddShop} from '../../store/actions/index'
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import PickLocation from '../../components/PickLocation/PickLocation'
 import validate from '../../utils/validation'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
+import DefaultButton from '../../components/UI/DefaultButton/DefaultButton'
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyBcs4ko-dTv7DhkZWp0BbcTs0z2nodA4y8'; // never save your real api key in a snack!
+
+Geocoder.init(GOOGLE_PLACES_API_KEY);
 
 
 class AddShop extends Component {
 
     state ={
+        modalVisible: false,
+        inputLocation: {
+          lat: '',
+          lng: ''
+        },
         controls: {
                 shopName: {
                   value: "",
@@ -40,7 +52,24 @@ class AddShop extends Component {
             }
     }
 
+    shopNameManualChangedHandler = (val) => {
+      this.setState(prevState => {
+        return {
+          controls: {
+            ...prevState.controls,
+            shopName: {
+              ...prevState.controls.shopName,
+              value: val,
+              valid: validate(val, prevState.controls.shopName.validationRules),
+              touched: true
+            }
+          }
+        };
+      });
+    }
+
     shopNameChangedHandler = (val) => {
+        console.log(val)
         this.setState(prevState => {
             return {
               controls: {
@@ -54,6 +83,31 @@ class AddShop extends Component {
               }
             };
           });
+        Geocoder.from(val)
+        .then(json => {
+            var location = json.results[0].geometry.location;
+            this.setState({
+              inputLocation: {
+                lat: location.lat,
+                lng: location.lng
+              }
+            })
+            this.locationPicker.changeState(location);
+        })
+        .catch(error => console.warn(error));
+        
+    }
+
+    modalVisibleHandler = () => {
+      this.setState(prevState => {
+        return {
+          modalVisible: prevState.modalVisible ? false: true
+        }
+      })
+    }
+
+    modalAddHandler = () => {
+      
     }
 
     shopDetailChangedHandler = (val) => {
@@ -74,6 +128,7 @@ class AddShop extends Component {
 
     reset = () => {
         this.setState({
+            modalVisible: false,
             controls: {
                 shopName: {
                   value: "",
@@ -137,29 +192,97 @@ class AddShop extends Component {
     render() {
 
         let submitButton = (
-        <Button 
-        title='Add shop' 
+        <DefaultButton  
         color='black' 
         onPress={this.shopAddedHandler}
         disabled= {!this.state.controls.shopName.valid}
-        />
+        >
+          AddShop
+        </DefaultButton>
         )
 
         // if(this.props.isLoading){
         //     submitButton = <ActivityIndicator color='black'/>
         // }
 
+        let placeInput = 'You shop name'
+
+        if(this.state.controls.shopName.value){
+          placeInput = this.state.controls.shopName.value
+        }
+
         return (
+  
             
               <View style={styles.container}>
                 <Text style={styles.headerTitle}> Add your shop </Text>
                 <DefaultInput
-                placeholder= 'Your shop name'
-                onChangeText= {this.shopNameChangedHandler} 
+                placeholder= {placeInput}
+                onChangeText= {this.shopNameManualChangedHandler} 
                 value={this.state.controls.shopName.value}
                 style={styles.inputField}
                 />   
-               
+                <DefaultButton  
+                  color='black' 
+                  onPress={this.modalVisibleHandler}
+                  >
+                    AddShop
+                </DefaultButton>
+                <Modal isVisible={this.state.modalVisible} style={styles.modal}>
+                <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
+                  <Left>
+                    <Button transparent>
+                      <Icon name="map" size={30} color="white" />
+                    </Button>
+                  </Left>
+                  <Body>
+                    <Title>Search your shop </Title>
+                  </Body>
+                </Header>
+                <GooglePlacesAutocomplete
+                  //onChangeText= {this.shopNameChangedHandler} 
+                  //value={this.state.controls.shopName.value}
+                  query={{
+                    key: GOOGLE_PLACES_API_KEY,
+                    language: 'en', // language of the results
+                    components: 'country:lk',
+                  }}
+                  onPress={(data, details = null) => {
+                    console.log(data, details)
+                    this.shopNameChangedHandler(data.description)
+                  }}
+                  onFail={error => console.error(error)}
+                  requestUrl={{
+                    url:
+                      'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+                    useOnPlatform: 'web',
+                  }} // this in only required for use on the web. See https://git.io/JflFv more for details.
+                  styles={{
+                    textInputContainer: {
+                      backgroundColor: 'rgba(0,0,0,0)',
+                      borderTopWidth: 0,
+                      borderBottomWidth: 0,
+                    },
+                    textInput: {
+                      marginLeft: 0,
+                      marginRight: 0,
+                      height: 38,
+                      color: '#5d5d5d',
+                      fontSize: 16,
+                    },
+                    predefinedPlacesDescription: {
+                      color: '#1faadb',
+                    },
+                  }}
+                  />
+
+                <DefaultButton  
+                  color='green' 
+                  onPress={this.modalVisibleHandler}
+                  >
+                    Set Location
+                </DefaultButton>
+                </Modal>
                 <DefaultInput
                 placeholder= 'Your shop details'
                 onChangeText= {this.shopDetailChangedHandler} 
@@ -168,7 +291,10 @@ class AddShop extends Component {
                 style={styles.inputField}
                 value={this.state.controls.shopDetail.value}
                 />  
-                <PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref}/>
+                <PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref}
+                lat={this.state.inputLocation.lat}
+                lng={this.state.inputLocation.lng}
+                />
                 <View style={styles.button}>
                     {submitButton}
                 </View>
@@ -184,8 +310,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#ecf0f1',
-        padding: 10
+        padding: 10,
+        paddingTop: 15
     },  
+    modal: {
+      backgroundColor: 'rgba(255,255,255,0.8)',
+      flex: 1,
+      padding: 10
+    },
     placeInput: {
       width: '100%'
     },

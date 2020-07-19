@@ -52,6 +52,10 @@ class Auth extends Component {
         successAlert: false
     }
 
+    componentDidMount() {
+        this.props.onAutoSignIn(this.props)
+    }
+
     showErrorAlert = () => {
         this.setState(prevState => {
           return{

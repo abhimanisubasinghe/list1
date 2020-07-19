@@ -71,8 +71,24 @@ class PickLocation extends Component{
         })
     }
 
-    render(){
+    changeState = (location) => {
+        console.log('clat',this.props.lat)
+        const coordsEvent = { 
+            nativeEvent: {
+                coordinate:{
+                    latitude: location.lat,
+                    longitude: location.lng
+                }
+            }
+        }
+        this.pickLocationHandler(coordsEvent)
+    }
 
+    render(){
+        console.log('map',this.props,'lat',this.state.focusedLocation.latitude)
+        // if(this.props.lat !== this.state.focusedLocation.latitude && this.props.lat !== ''){
+        //     this.changeState()
+        // }
         let marker = null;
 
         if (this.state.locationChose){
