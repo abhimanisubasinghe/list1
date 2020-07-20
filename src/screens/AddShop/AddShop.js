@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput,  StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput,  StyleSheet, ScrollView, Image, ActivityIndicator, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Button, Subtitle ,  Tab, Tabs, ScrollableTab } from 'native-base';
 import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
@@ -195,7 +195,7 @@ class AddShop extends Component {
         <DefaultButton  
         color='black' 
         onPress={this.shopAddedHandler}
-        disabled= {!this.state.controls.shopName.valid}
+        disabled= {!this.state.controls.shopName.valid || !this.state.controls.location.valid}
         >
           AddShop
         </DefaultButton>
@@ -205,7 +205,7 @@ class AddShop extends Component {
         //     submitButton = <ActivityIndicator color='black'/>
         // }
 
-        let placeInput = 'You shop name'
+        let placeInput = 'Your shop name'
 
         if(this.state.controls.shopName.value){
           placeInput = this.state.controls.shopName.value
@@ -214,20 +214,24 @@ class AddShop extends Component {
         return (
   
             
-              <View style={styles.container}>
+              <ScrollView >
+                <View  style={styles.container}>
                 <Text style={styles.headerTitle}> Add your shop </Text>
+                <View style={styles.placeInputView}>
                 <DefaultInput
                 placeholder= {placeInput}
                 onChangeText= {this.shopNameManualChangedHandler} 
                 value={this.state.controls.shopName.value}
-                style={styles.inputField}
+                style={styles.inputFieldPlace}
                 />   
                 <DefaultButton  
                   color='black' 
                   onPress={this.modalVisibleHandler}
+                  style= {styles.inputFieldPlaceButton}
                   >
-                    AddShop
+                    Search
                 </DefaultButton>
+                </View>
                 <Modal isVisible={this.state.modalVisible} style={styles.modal}>
                 <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
                   <Left>
@@ -299,6 +303,7 @@ class AddShop extends Component {
                     {submitButton}
                 </View>
                 </View>
+                </ScrollView>
     
         )
     }
@@ -321,6 +326,9 @@ const styles = StyleSheet.create({
     placeInput: {
       width: '100%'
     },
+    placeInputView: {
+      flexDirection: 'row'
+    },  
     headerTitle: {
       fontSize: 25,
       textTransform: 'capitalize',
@@ -344,7 +352,15 @@ const styles = StyleSheet.create({
     },
     inputField: {
         borderColor: 'black'
-    }
+    },
+    inputFieldPlace: {
+      borderColor: 'black',
+      width: '75%'
+  },
+  inputFieldPlaceButton: {
+    width: '25%',
+    //height: '20%'
+}
 })
 
 // const mapStateToProps = state => {
