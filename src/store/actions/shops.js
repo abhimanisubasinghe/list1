@@ -156,7 +156,7 @@ export const deleteShop = (key) => {
 //   }
 // }
 
-export const updateShop = (key, shopName, shopDescription) => {
+export const updateShop = (key, shopName, shopDescription, shopLocation) => {
   //console.log(key)
     return (dispatch) => {
         dispatch(uiStartLoading());
@@ -170,6 +170,7 @@ export const updateShop = (key, shopName, shopDescription) => {
             const shopData = {
               name: shopName,
               description: shopDescription,
+              location: shopLocation
             };
             return fetch("https://list1-9090.firebaseio.com/shops/" + key + ".json?auth="+token, {
                 method: "PATCH",

@@ -87,7 +87,7 @@ class PickLocation extends Component{
     }
 
     changeState = (location) => {
-        console.log('clat',this.props.lat)
+        //console.log('clat',this.props.lat)
         const coordsEvent = { 
             nativeEvent: {
                 coordinate:{
@@ -100,7 +100,7 @@ class PickLocation extends Component{
     }
 
     render(){
-        console.log('map',this.props,'lat',this.state.focusedLocation.latitude)
+        //console.log('map',this.props,'lat',this.state.focusedLocation.latitude)
         // if(this.props.lat !== this.state.focusedLocation.latitude && this.props.lat !== ''){
         //     this.changeState()
         // }

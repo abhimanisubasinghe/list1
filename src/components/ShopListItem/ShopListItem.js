@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableHighlight, View,  StyleSheet, Image,Dimensions, TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
+import { TouchableHighlight, View,  StyleSheet, Image,Dimensions, TouchableOpacity, Text, TextInput, ActivityIndicator,ScrollView, KeyboardAvoidingView } from 'react-native'
 import {  Container, Header, Content, Card, CardItem, Body} from 'native-base';
 import Modal from 'react-native-modal';
 import defaultImage from '../../assets/default.jpg'
@@ -30,6 +30,7 @@ class shopListItem  extends React.Component {
               }
 
             },
+            
             shopDetail: {
                 value: this.props.shopDescription,
                 valid: false,
@@ -41,6 +42,7 @@ class shopListItem  extends React.Component {
               },
             location: {
                 value: this.props.shopLocation,
+                valid: true
             }
         },
         focusedLocation:{
@@ -73,62 +75,95 @@ class shopListItem  extends React.Component {
     }
 
     modalView = () => {
+        //this.reset()
         this.setState(prevState => {
             return {
-                modalLocation: prevState.modalLocation ? false : true
+                modalLocation: prevState.modalLocation ? false : true,
+                focusedLocation:{
+                    latitude: this.props.shopLocation.latitude ,
+                    longitude:this.props.shopLocation.longitude ,
+                    latitudeDelta: 0.0122,
+                    longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
+                },   
             }
         })
     }
 
     updateModalView = () => {
         // this.locationPicker.changeState(this.props.shopLocation)
-        console.log(this.locationPicker)
+        //console.log(this.locationPicker)
         this.setState(prevState => {
             return{
                 updateModal: prevState.updateModal ? false : true
             }
         })
+        //this.shopUpdateHandler()
 
     }
 
+    updateHandler = () => {
+        this.setState(prevState => {
+            return{
+                updateModal: prevState.updateModal ? false : true
+            }
+        })
+        this.shopUpdateHandler()
+    }
+
+
     shopUpdateHandler = () => {   
         //const popAction = StackActions.pop(1);
-        console.log(this.props.shopKey)
+        //console.log(this.props.shopKey)
         const shopName = (this.state.controls.shopName.value?this.state.controls.shopName.value: this.props.shopName )
         const shopDescription = (this.state.controls.shopDetail.value?this.state.controls.shopDetail.value: this.props.shopDescription )
-        //this.props.onUpdateShop(this.props.shopKey, shopName, shopDescription);
+        const shopLocation = (this.state.controls.location.value?this.state.controls.location.value: this.props.shopLocation )
+        //console.log(this.props.shopName, this.props.shopDescription, this.props.shopLocation)
+        //console.log(shopName, shopDescription, shopLocation)
+        this.props.onUpdateShop(this.props.shopKey, shopName, shopDescription, shopLocation);
         this.reset()
         //this.props.shop.navigation.dispatch(popAction);
     }
 
     reset = () => {
         this.setState({
-            modalLocation: false,
-            controls: {
-                shopName: {
-                  value: "",
-                  valid: false,
-                  touched: false,
-                  validationRules: {
-                    notEmpty: true
-                  }
+        modalLocation : false,
+        updateModal: false,
+        controls: {
+            shopName: {
+              value: this.props.shopName,
+              valid: false,
+              touched: false,
+              validationRules: {
+                notEmpty: true
+              }
 
-                },
-                shopDetail: {
-                    value: "",
-                    valid: false,
-                    touched: false,
-                    validationRules: {
-                      notEmpty: true
-                    }
-  
-                  },
+            },
+            
+            shopDetail: {
+                value: this.props.shopDescription,
+                valid: false,
+                touched: false,
+                validationRules: {
+                  notEmpty: true
+                }
+
+              },
+            location: {
+                value: this.props.shopLocation,
+                valid: true
             }
+        },
+        focusedLocation:{
+            latitude: this.props.shopLocation.latitude ,
+            longitude:this.props.shopLocation.longitude ,
+            latitudeDelta: 0.0122,
+            longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
+        },
         })
     }
 
     componentDidMount(){
-        this.reset()
+        //this.reset()
     }
 
     shopNameChangedHandler = (val) => {
@@ -164,7 +199,7 @@ class shopListItem  extends React.Component {
     }
 
     render(){
-       console.log(this.state.focusedLocation)
+      // console.log(this.state.focusedLocation)
 
        let marker = null;
 
@@ -175,7 +210,7 @@ class shopListItem  extends React.Component {
         let updateItem = null
 
         let updateButton = (
-            <DefaultButton color='green' onPress= {this.shopUpdateHandler}>
+            <DefaultButton color='green' onPress= {() => this.updateHandler()}>
                   Update
             </DefaultButton>
         )
@@ -226,7 +261,7 @@ class shopListItem  extends React.Component {
         }
 
         return(
-            <View>
+            <KeyboardAvoidingView>
                 {locationModal}
                 <Modal isVisible={this.state.updateModal}>
                             <TouchableHighlight>
@@ -253,18 +288,11 @@ class shopListItem  extends React.Component {
                                 />
                                 <View style={{width: '100%', alignItems: 'center'}}>
                                 <PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref}
-                lat={this.props.shopLocation.latitude}
-                lng={this.props.shopLocation.longitude}
-                loactionChose = {true}
-                />
-                </View>
-                                {/* <MapView
-                                initialRegion={this.state.focusedLocation}
-                                style={styles.map}
-                                >
-                                {marker}
-                                </MapView>   */}
-                               
+                                lat={this.props.shopLocation.latitude}
+                                lng={this.props.shopLocation.longitude}
+                                loactionChose = {true}
+                                />
+                                </View>
                             </Body>
                             </CardItem>
                             <CardItem footer bordered>
@@ -320,7 +348,7 @@ class shopListItem  extends React.Component {
                 </View> 
             </TouchableHighlight>
             {updateItem}
-            </View>
+            </KeyboardAvoidingView>
         )
     }
 
@@ -396,7 +424,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return{
         onDeleteShop: (key) => dispatch(deleteShop(key)),
-        onUpdateShop: (key, shopName, shopDescription) => dispatch(updateShop(key, shopName, shopDescription))
+        onUpdateShop: (key, shopName, shopDescription, shopLocation) => dispatch(updateShop(key, shopName, shopDescription, shopLocation))
     }
 }
 
