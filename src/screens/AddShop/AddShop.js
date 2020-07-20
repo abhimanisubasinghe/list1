@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Geocoder from 'react-native-geocoding';
 
-//import {addShop,  startAddShop} from '../../store/actions/index'
+import {addShop,  startAddShop, getShops} from '../../store/actions/index'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import PickLocation from '../../components/PickLocation/PickLocation'
 import validate from '../../utils/validation'
@@ -183,10 +183,11 @@ class AddShop extends Component {
   }
 
     shopAddedHandler = () => {
-        //this.props.onAddShop(this.state.controls.shopName.value, this.state.controls.shopDetail.value, this.state.controls.image.value)
+        this.props.onAddShop(this.state.controls.shopName.value, this.state.controls.shopDetail.value, this.state.controls.location.value)
         alert(`You added ${this.state.controls.shopName.value}`)
         this.reset()
         this.locationPicker.reset()
+        this.props.onLoadShops()
     }
 
     render() {
@@ -201,9 +202,9 @@ class AddShop extends Component {
         </DefaultButton>
         )
 
-        // if(this.props.isLoading){
-        //     submitButton = <ActivityIndicator color='black'/>
-        // }
+        if(this.props.isLoading){
+            submitButton = <ActivityIndicator color='black'/>
+        }
 
         let placeInput = 'Your shop name'
 
@@ -363,20 +364,22 @@ const styles = StyleSheet.create({
 }
 })
 
-// const mapStateToProps = state => {
-//     return {
-//         isLoading: state.ui.isLoading,
-//         shopAdded: state.shops.shopAdded
-//     }
-// }
+const mapStateToProps = state => {
+    return {
+        isLoading: state.ui.isLoading,
+        shopAdded: state.shops.shopAdded,
+        shops: state.shops.shops
+    }
+}
 
-// const mapDispatchToProps = dispatch => {
-//     return{
-//         onAddShop: (shopName, location,image) => dispatch(AddShop(shopName, location, image)),
-//         onStartAddShop: () => dispatch(startAddShop())
-//     }
-// }
+const mapDispatchToProps = dispatch => {
+    return{
+        onAddShop: (shopName, location,image) => dispatch(addShop(shopName, location, image)),
+        onStartAddShop: () => dispatch(startAddShop()),
+        onLoadShops: () => dispatch(getShops())
+    }
+}
 
-// export default connect(mapStateToProps, mapDispatchToProps) (AddShop);
+export default connect(mapStateToProps, mapDispatchToProps) (AddShop);
 
-export default AddShop;
+//export default AddShop;

@@ -5,9 +5,9 @@ import defaultImage from '../../assets/default.jpg'
 import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-// import {deleteShop, updateShop } from '../../store/actions/index'
+import {deleteShop, updateShop } from '../../store/actions/index'
 
-import ShopUpdate from '../ShopUpdate/ShopUpdate'
+//import ShopUpdate from '../ShopUpdate/ShopUpdate'
 import DefaultInput from '../UI/DefaultInput/DefaultInput'
 import DefaultButton from '../UI/DefaultButton/DefaultButton'
 import validate from '../../utils/validation'
@@ -44,7 +44,7 @@ class shopListItem  extends React.Component {
     shopDeletedHandler = () => {   
         //const popAction = StackActions.pop(1);
         console.log(this.props.shopKey)
-        //this.props.onDeleteShop(this.props.shopKey);
+        this.props.onDeleteShop(this.props.shopKey);
         //this.props.navigation.dispatch(popAction);
     }
 
@@ -187,12 +187,6 @@ class shopListItem  extends React.Component {
             <TouchableHighlight>
                 <View style={styles.container}>
                     <View style={styles.listItem}>
-                        
-                        <Image
-                            source={this.props.shopImage}
-                            style= {styles.shopImage}
-                            resizeMode = "cover"
-                        />
                         {content}
                     </View>  
                     <View style={styles.buttonView}>
@@ -276,19 +270,18 @@ const styles = StyleSheet.create({
     }
 });
 
-// const mapStateToProps = state => {
-//     return {
-//         isLoading: state.ui.isLoading,
-//     }
-// }
+const mapStateToProps = state => {
+    return {
+        isLoading: state.ui.isLoading,
+    }
+}
 
-// const mapDispatchToProps = dispatch => {
-//     return{
-//         onDeleteShop: (key) => dispatch(deleteShop(key)),
-//         onUpdateShop: (key, shopName, shopDescription) => dispatch(updateShop(key, shopName, shopDescription))
-//     }
-// }
+const mapDispatchToProps = dispatch => {
+    return{
+        onDeleteShop: (key) => dispatch(deleteShop(key)),
+        onUpdateShop: (key, shopName, shopDescription) => dispatch(updateShop(key, shopName, shopDescription))
+    }
+}
 
-// export default connect(mapStateToProps, mapDispatchToProps)(shopListItem);
+export default connect(mapStateToProps, mapDispatchToProps)(shopListItem);
 
-export default shopListItem;

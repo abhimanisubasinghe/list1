@@ -5,12 +5,14 @@ import placesReducer from './reducers/places';
 import uiReducer from './reducers/ui';
 import authReducer from './reducers/auth';
 import productReducer from './reducers/products';
+import shopReducer from './reducers/shops';
 
 const rootReducer = combineReducers({
     places: placesReducer,
     ui: uiReducer,
     auth: authReducer,
     products: productReducer,
+    shops: shopReducer,
 });
 
 let composeEnhancers = compose;

@@ -2,46 +2,45 @@ import React, {Component}  from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
 import {connect} from 'react-redux'
 
-import {getProducts} from '../../store/actions/index'
-import ProductList from '../../components/ProductList/ProductList'
-import ProductDetails from '../ProductDetails/ProductDetails'
+import {getShops} from '../../store/actions/index'
+import ShopList from '../../components/ShopList/ShopList'
 
 class ViewShops extends Component  {
 
     state ={
-        productsLoaded: false ,
+        shopsLoaded: false ,
         removeAnimation: new Animated.Value(1),
-        productsAnim: new Animated.Value(0)
+        shopsAnim: new Animated.Value(0)
      }
  
      componentDidMount(){
          console.log('loading')
-         this.props.onLoadProducts()
+         this.props.onLoadShops()
          
      }
  
     //  componentWillUpdate(){
-    //      this.props.onLoadProducts()
+    //      this.props.onLoadShops()
     //  }
  
-     productsLoadedHandler = () => {
-         Animated.timing(this.state.productsAnim, {
+     shopsLoadedHandler = () => {
+         Animated.timing(this.state.shopsAnim, {
              toValue: 1,
              duration: 500,
              useNativeDriver: true
          }).start();
      }
  
-     productsSearchHandler = () => {
+     shopsSearchHandler = () => {
          Animated.timing(this.state.removeAnimation, {
              toValue: 0,
              duration: 500,
              useNativeDriver: true
          }).start(() => {
              this.setState({
-                 productsLoaded: true
+                 shopsLoaded: true
              })
-             this.productsLoadedHandler();
+             this.shopsLoadedHandler();
          });
  
      }
@@ -63,21 +62,21 @@ class ViewShops extends Component  {
                  ]
              }}
              >
-             <TouchableOpacity onPress={this.productsSearchHandler}>
+             <TouchableOpacity onPress={this.shopsSearchHandler}>
                  <View style={styles.searchButton}>
-                     <Text style={styles.searchButtonText}>My Products</Text>
+                     <Text style={styles.searchButtonText}>My Shops</Text>
                  </View>
              </TouchableOpacity>
              </Animated.View>
          )
  
-         if(this.state.productsLoaded){
+         if(this.state.shopsLoaded){
              content = (
                  <Animated.View style={{
-                     opacity: this.state.productsAnim
+                     opacity: this.state.shopsAnim
                  }}>
-                     <ProductList
-                     products={this.props.products}
+                     <ShopList
+                     shops={this.props.shops}
                      onItemSelected={this.itemSelectedHandler}
                      />
                  </Animated.View>
@@ -86,7 +85,7 @@ class ViewShops extends Component  {
          
          return ( 
              <View 
-             style= {this.state.productsLoaded ? null : styles.buttonContaier}
+             style= {this.state.shopsLoaded ? null : styles.buttonContaier}
              >
                  {content}
              </View>
@@ -118,13 +117,13 @@ class ViewShops extends Component  {
  
  const mapStateToProps = state => {
      return{
-         products: state.products.products
+         shops: state.shops.shops
      }
  }
  
  const mapDispatchToProps = dispatch => {
      return {
-         onLoadProducts: () => dispatch(getProducts())
+         onLoadShops: () => dispatch(getShops())
      }
  }
  

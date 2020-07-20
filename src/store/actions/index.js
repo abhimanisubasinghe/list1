@@ -3,3 +3,4 @@ export { deletePlace, getPlaces, addPlace, startAddPlace, placeAdded} from './pl
 export {tryAuth, authGetToken, authAutoSignIn, authLogout} from './auth'
 export { uiStartLoading, uiStopLoading } from './ui'
 export {addProduct,productAdded,startAddProduct,getProducts, deleteProduct, updateProduct, startUpdateProduct, stopUpdateProduct } from './products'
+export {addShop,shopAdded,startAddShop,getShops, deleteShop, updateShop, } from './shops'
