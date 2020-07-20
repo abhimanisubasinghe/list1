@@ -12,6 +12,7 @@ import PickLocation from '../../components/PickLocation/PickLocation'
 import validate from '../../utils/validation'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 import DefaultButton from '../../components/UI/DefaultButton/DefaultButton'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyBcs4ko-dTv7DhkZWp0BbcTs0z2nodA4y8'; // never save your real api key in a snack!
 
@@ -215,7 +216,7 @@ class AddShop extends Component {
         return (
   
             
-              <ScrollView >
+              <ScrollView keyboardShouldPersistTaps='always'>
                 <View  style={styles.container}>
                 <Text style={styles.headerTitle}> Add your shop </Text>
                 <View style={styles.placeInputView}>
@@ -233,7 +234,7 @@ class AddShop extends Component {
                     Search
                 </DefaultButton>
                 </View>
-                <Modal isVisible={this.state.modalVisible} style={styles.modal}>
+                <Modal isVisible={this.state.modalVisible} style={styles.modal} >
                 <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
                   <Left>
                     <Button transparent>
@@ -252,10 +253,13 @@ class AddShop extends Component {
                     language: 'en', // language of the results
                     components: 'country:lk',
                   }}
-                  onPress={(data, details = null) => {
+                  onPress={( data,details = null) => {
                     console.log(data, details)
                     this.shopNameChangedHandler(data.description)
                   }}
+                  //onPress={console.log(query)}
+                  listViewDisplayed={false}  
+                  
                   onFail={error => console.error(error)}
                   requestUrl={{
                     url:
@@ -278,9 +282,7 @@ class AddShop extends Component {
                     predefinedPlacesDescription: {
                       color: '#1faadb',
                     },
-                  }}
-                  />
-
+                  }}/>
                 <DefaultButton  
                   color='green' 
                   onPress={this.modalVisibleHandler}
@@ -315,7 +317,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ecf0f1',
+        backgroundColor: 'white',
         padding: 10,
         paddingTop: 15
     },  

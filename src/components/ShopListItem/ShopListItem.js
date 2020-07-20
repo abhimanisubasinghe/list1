@@ -1,9 +1,11 @@
 import React from 'react'
-import { TouchableHighlight, View,  StyleSheet, Image, TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
+import { TouchableHighlight, View,  StyleSheet, Image,Dimensions, TouchableOpacity, Text, TextInput, ActivityIndicator } from 'react-native'
 import {  Container, Header, Content, Card, CardItem, Body} from 'native-base';
+import Modal from 'react-native-modal';
 import defaultImage from '../../assets/default.jpg'
 import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import MapView from 'react-native-maps'
 
 import {deleteShop, updateShop } from '../../store/actions/index'
 
@@ -11,11 +13,13 @@ import {deleteShop, updateShop } from '../../store/actions/index'
 import DefaultInput from '../UI/DefaultInput/DefaultInput'
 import DefaultButton from '../UI/DefaultButton/DefaultButton'
 import validate from '../../utils/validation'
+import PickLocation from '../PickLocation/PickLocation'
 
 class shopListItem  extends React.Component {
 
     state = {
-        update : false,
+        modalLocation : false,
+        updateModal: false,
         controls: {
             shopName: {
               value: this.props.shopName,
@@ -36,9 +40,15 @@ class shopListItem  extends React.Component {
 
               },
             location: {
-                value: this.props.shopLocations,
+                value: this.props.shopLocation,
             }
-        }
+        },
+        focusedLocation:{
+            latitude: this.props.shopLocation.latitude ,
+            longitude:this.props.shopLocation.longitude ,
+            latitudeDelta: 0.0122,
+            longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
+        },
     }
 
     shopDeletedHandler = () => {   
@@ -48,12 +58,37 @@ class shopListItem  extends React.Component {
         //this.props.navigation.dispatch(popAction);
     }
 
-    shopUpdateView = () => {
+    locationPickedHandler = location => {
         this.setState(prevState => {
-            return {
-                update: prevState.update ? false : true
+            return{
+                controls: {
+                    ...prevState.controls,
+                    location: {
+                        value: location,
+                        valid: true
+                    }
+                }
             }
         })
+    }
+
+    modalView = () => {
+        this.setState(prevState => {
+            return {
+                modalLocation: prevState.modalLocation ? false : true
+            }
+        })
+    }
+
+    updateModalView = () => {
+        // this.locationPicker.changeState(this.props.shopLocation)
+        console.log(this.locationPicker)
+        this.setState(prevState => {
+            return{
+                updateModal: prevState.updateModal ? false : true
+            }
+        })
+
     }
 
     shopUpdateHandler = () => {   
@@ -68,7 +103,7 @@ class shopListItem  extends React.Component {
 
     reset = () => {
         this.setState({
-            update: false,
+            modalLocation: false,
             controls: {
                 shopName: {
                   value: "",
@@ -129,7 +164,14 @@ class shopListItem  extends React.Component {
     }
 
     render(){
-       // console.log(this.props)
+       console.log(this.state.focusedLocation)
+
+       let marker = null;
+
+        if (this.state.focusedLocation){
+            marker = <MapView.Marker coordinate= {this.state.focusedLocation}/>
+        }
+
         let updateItem = null
 
         let updateButton = (
@@ -138,13 +180,60 @@ class shopListItem  extends React.Component {
             </DefaultButton>
         )
 
-        if(this.state.update){
-            updateItem = <View>
+        let locationModal = null
+
+       // let updateModal = null
+
+        if(this.state.modalLocation){
+            locationModal = <Modal isVisible={this.state.modalLocation}>
                             <TouchableHighlight>
-                            <Card collapsable>
-                            <CardItem bordered>
-                                <Text style={styles.shopName} >Updating: </Text>
-                                <Text style={styles.shopDescription}>{this.props.shopName}</Text>
+                            <Card collapsable transparent={true} style={{backgroundColor: 'rgba(255,255,255,0.1)'}}>
+                            <CardItem header bordered style={{backgroundColor: '#6a3982'}}>
+                                <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18,}}>{this.props.shopName}</Text>
+                            </CardItem>
+                            <CardItem header bordered>
+                            <Body>
+                            <Text style={styles.shopDescription}>{this.props.shopDescription}</Text>                                
+                                <MapView
+                                initialRegion={this.state.focusedLocation}
+                                style={styles.map}
+                                >
+                                {marker}
+                                </MapView>  
+                               
+                            </Body>
+                            </CardItem>
+                            <CardItem footer bordered>
+                            <View style={{flexDirecttion: 'row',justifyContent:'center', alignItems: 'center'}}>    
+                            <DefaultButton color='black' onPress= {this.modalView}>
+                                Close
+                            </DefaultButton>
+                            </View>
+                            </CardItem>
+                        </Card>
+                    </TouchableHighlight>
+                </Modal>
+        }
+        
+        let content = <View style={styles.textContainer}>
+                        <Text style={styles.shopName}>{this.props.shopName}</Text>
+                        <Text style={styles.shopDescription}>{this.props.shopDescription}
+                        </Text>
+                    </View>
+        
+        if(this.props.isLoading){
+            content = <ActivityIndicator color='black'/>
+        }
+
+        return(
+            <View>
+                {locationModal}
+                <Modal isVisible={this.state.updateModal}>
+                            <TouchableHighlight>
+                            <Card collapsable transparent={true} style={{backgroundColor: 'rgba(255,255,255,0.1)'}}>
+                            <CardItem bordered style={{backgroundColor: '#6a3982'}}>
+                                <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18,}} >Updating: </Text>
+                                <Text style={styles.shopDescription} style={{color: 'white',fontStyle: 'italic', fontSize: 16,}}>{this.props.shopName}</Text>
                             </CardItem>
                             <CardItem bordered>
                             <Body>
@@ -161,35 +250,52 @@ class shopListItem  extends React.Component {
                                 numberOfLines= {5}
                                 value={this.state.controls.shopDetail.value}
                                 style={styles.inputField}
-                                />  
+                                />
+                                <View style={{width: '100%', alignItems: 'center'}}>
+                                <PickLocation onLocationPick={this.locationPickedHandler} ref={ref => this.locationPicker = ref}
+                lat={this.props.shopLocation.latitude}
+                lng={this.props.shopLocation.longitude}
+                loactionChose = {true}
+                />
+                </View>
+                                {/* <MapView
+                                initialRegion={this.state.focusedLocation}
+                                style={styles.map}
+                                >
+                                {marker}
+                                </MapView>   */}
+                               
                             </Body>
                             </CardItem>
                             <CardItem footer bordered>
                             {updateButton}
+                            <DefaultButton color='black' onPress= {this.updateModalView}>
+                                Close
+                            </DefaultButton>
                             </CardItem>
                         </Card>
                     </TouchableHighlight>
-                </View>
-        }
-
-        let content = <View style={styles.textContainer}>
-                        <Text style={styles.shopName}>{this.props.shopName}</Text>
-                        <Text style={styles.shopDescription}>{this.props.shopDescription}
-                        </Text>
-                    </View>
+                </Modal>
         
-        if(this.props.isLoading){
-            content = <ActivityIndicator color='black'/>
-        }
-
-        return(
-            <View>
-            <TouchableHighlight>
+                
+            {/* <TouchableHighlight onPress={() => this.modalView()}>
+                 */}
+                 <TouchableHighlight>
                 <View style={styles.container}>
                     <View style={styles.listItem}>
                         {content}
                     </View>  
                     <View style={styles.buttonView}>
+                        <TouchableOpacity onPress={() => this.modalView()}>
+                            <View style={styles.button}>
+                            <Icon 
+                                size= {30}
+                                name="map-marker-alt"
+                                color="black"
+                                textAlign= "center"
+                            />
+                            </View>
+                        </TouchableOpacity> 
                         <TouchableOpacity onPress={this.shopDeletedHandler}>
                             <View style={styles.button}>
                             <Icon 
@@ -200,7 +306,7 @@ class shopListItem  extends React.Component {
                             />
                             </View>
                         </TouchableOpacity>  
-                        <TouchableOpacity onPress={this.shopUpdateView}>
+                        <TouchableOpacity onPress={() => this.updateModalView()}>
                             <View style={styles.button}>
                             <Icon 
                                 size= {30}
@@ -239,6 +345,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+    itemContainer: {
+        //alignItems: 'center'
+    },
     shopImage: {
         marginRight: 10,
         height: 100,
@@ -267,6 +376,14 @@ const styles = StyleSheet.create({
         padding: 5,
         paddingLeft: 20,
         paddingRight: 20
+    },
+    map:{
+        width: '100%',
+        height: 250,
+        marginTop: 20,
+        borderColor : 'black',
+        borderWidth: 1
+
     }
 });
 

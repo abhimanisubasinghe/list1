@@ -8,12 +8,12 @@ class PickLocation extends Component{
     
     state= {
         focusedLocation:{
-            latitude: 7.2906 ,
-            longitude:80.6337 ,
+            latitude: this.props.lat?this.props.lat:7.2906 ,
+            longitude:this.props.lng?this.props.lng:80.6337 ,
             latitudeDelta: 0.0122,
             longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
         },
-        locationChose: false
+        locationChose: this.props.loactionChose ? true: false 
     }
 
     reset = () => {
@@ -27,6 +27,21 @@ class PickLocation extends Component{
             locationChose: false
         })
     }
+
+    // componentDidMount(){
+    //     console.log('in pick',this.props)
+    //     if(this.props.lat!== null){
+    //         const location = {
+    //             lat: this.props.lat ,
+    //             lng:this.props.lng ,  
+    //         }
+    //         this.changeState(location)
+    //     }
+    // }
+
+    // componentDidMount() {
+    //     console.log(this.props.loactionChose)
+    // }
 
     pickLocationHandler = event => {
         const coords = event.nativeEvent.coordinate;
