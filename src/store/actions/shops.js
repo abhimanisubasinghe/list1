@@ -1,4 +1,4 @@
-import { SET_SHOPS, REMOVE_SHOP, SHOP_ADDED, START_ADD_SHOP,} from './actionType'
+import { SET_SHOPS, REMOVE_SHOP, SHOP_ADDED, START_ADD_SHOP, SEARCH_SHOP, STOP_SEARCH_SHOP} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 export const startAddShop = () => {
@@ -210,3 +210,16 @@ export const removeShop = key => {
         key: key
     };
 };
+
+export const searchShop = val => {
+  return {
+    type: SEARCH_SHOP,
+    val: val
+  }
+}
+
+export const stopSearchShop = () => {
+  return {
+    type: STOP_SEARCH_SHOP
+  }
+}

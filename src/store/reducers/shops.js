@@ -1,8 +1,9 @@
-import { DELETE_SHOP, SET_SHOPS, REMOVE_SHOP, SHOP_ADDED, START_ADD_SHOP, } from '../actions/actionType'
+import { DELETE_SHOP, SET_SHOPS, REMOVE_SHOP, SHOP_ADDED, START_ADD_SHOP,SEARCH_SHOP,STOP_SEARCH_SHOP } from '../actions/actionType'
 
 const initialState = {
     shops: [],
     shopAdded: false, 
+    searchShop: ''
 }
 
 const reducer = (state = initialState, action) => {
@@ -19,6 +20,20 @@ const reducer = (state = initialState, action) => {
                 return shop.key !== action.key;
                 })
             };    
+
+        case SEARCH_SHOP: {
+            return{
+                ...state,
+                searchShop: action.val
+            }
+        }
+
+        case STOP_SEARCH_SHOP: {
+            return{
+                ...state,
+                searchShop: ''
+            }
+        }
 
         case START_ADD_SHOP: 
             return{

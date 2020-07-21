@@ -1,27 +1,31 @@
 import React, {Component}  from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, } from 'react-native'
 import {connect} from 'react-redux'
 
-import {getShops} from '../../store/actions/index'
+import {getShops, searchShop, stopSearchShop} from '../../store/actions/index'
 import ShopList from '../../components/ShopList/ShopList'
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 
 class ViewShops extends Component  {
 
     state ={
         shopsLoaded: false ,
         removeAnimation: new Animated.Value(1),
-        shopsAnim: new Animated.Value(0)
+        shopsAnim: new Animated.Value(0),
+        search: ''
      }
  
      componentDidMount(){
          console.log('loading')
          this.props.onLoadShops()
+         this.props.onStopSearchShops()
          
      }
- 
-    //  componentWillUpdate(){
-    //      this.props.onLoadShops()
-    //  }
+
+     handleChange = (val) => {
+        this.props.onSearchShops(val);
+      } 
+
  
      shopsLoadedHandler = () => {
          Animated.timing(this.state.shopsAnim, {
@@ -70,13 +74,35 @@ class ViewShops extends Component  {
              </Animated.View>
          )
  
+         let shops = this.props.shops
+        //console.log('testing', this.state.search)
+
+        let shop = this.props.searchShop.trim().toLowerCase();
+        //console.log('search shop',shop)
+        if (shop.length > 0) {
+        shops = shops.filter(item => item.name.toLowerCase().match(shop));
+        }
+
+        //console.log('loading shops', shops)
+
          if(this.state.shopsLoaded){
              content = (
                  <Animated.View style={{
                      opacity: this.state.shopsAnim
                  }}>
+                     <View style={{alignItems: 'center'}}>
+                    <DefaultInput
+                        placeholder = 'search'
+                        style = {{
+                            borderColor: 'black',
+                            width: Dimensions.get("window").width* 0.9
+                        }}
+                        value={this.props.searchShop}
+                        onChangeText={this.handleChange}
+                    />
+                    </View>
                      <ShopList
-                     shops={this.props.shops}
+                     shops={shops}
                      onItemSelected={this.itemSelectedHandler}
                      />
                  </Animated.View>
@@ -117,13 +143,16 @@ class ViewShops extends Component  {
  
  const mapStateToProps = state => {
      return{
-         shops: state.shops.shops
+         shops: state.shops.shops,
+         searchShop: state.shops.searchShop
      }
  }
  
  const mapDispatchToProps = dispatch => {
      return {
-         onLoadShops: () => dispatch(getShops())
+         onLoadShops: () => dispatch(getShops()),
+         onSearchShops: (val) => dispatch(searchShop(val)),
+         onStopSearchShops: () => dispatch(stopSearchShop())
      }
  }
  

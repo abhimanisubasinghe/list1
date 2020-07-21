@@ -1,9 +1,10 @@
-import { DELETE_PRODUCT, SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, STOP_UPDATE_PRODUCT, START_UPDATE_PRODUCT} from '../actions/actionType'
+import { DELETE_PRODUCT, SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, STOP_UPDATE_PRODUCT, START_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT} from '../actions/actionType'
 
 const initialState = {
     products: [],
     productAdded: false, 
-    productUpdating: false
+    productUpdating: false,
+    searchProduct: ''
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,6 +14,20 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 products: action.products
             }
+
+        case SEARCH_PRODUCT: {
+            return{
+                ...state,
+                searchProduct: action.val
+            }
+        }
+
+        case STOP_SEARCH_PRODUCT: {
+            return{
+                ...state,
+                searchProduct: ''
+            }
+        }
         case REMOVE_PRODUCT:
             return {
                 ...state,

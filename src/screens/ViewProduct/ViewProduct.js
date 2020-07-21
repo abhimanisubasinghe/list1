@@ -1,12 +1,13 @@
 import React, {Component}  from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native'
 import {connect} from 'react-redux'
-import {getProducts} from '../../store/actions/index'
+import {getProducts, searchProduct, stopSearchProduct} from '../../store/actions/index'
 //import ProductList from '../../components/ProductList/ProductList'
 import ProductList from '../../components/ProductList/ProductList'
 //import ProductListItem from '../../components/'
 
 import ProductDetails from '../ProductDetails/ProductDetails'
+import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 
 class ViewProduct extends Component  {
 
@@ -19,8 +20,13 @@ class ViewProduct extends Component  {
      componentDidMount(){
          console.log('loading')
          this.props.onLoadProducts()
+         this.props.onStopSearchProduct()
          
      }
+
+     handleChange = (val) => {
+        this.props.onSearchProduct(val);
+      } 
  
     //  componentWillUpdate(){
     //      this.props.onLoadProducts()
@@ -83,14 +89,34 @@ class ViewProduct extends Component  {
              </TouchableOpacity>
              </Animated.View>
          )
+
+        let products = this.props.products
+        //console.log('testing', this.state.search)
+
+        let product = this.props.searchProduct.trim().toLowerCase();
+        //console.log('search shop',shop)
+        if (product.length > 0) {
+        products = products.filter(item => item.name.toLowerCase().match(product));
+        }
  
          if(this.state.productsLoaded){
              content = (
                  <Animated.View style={{
                      opacity: this.state.productsAnim
                  }}>
+                    <View style={{alignItems: 'center'}}>
+                    <DefaultInput
+                        placeholder = 'search'
+                        style = {{
+                            borderColor: 'black',
+                            width: Dimensions.get("window").width* 0.9
+                        }}
+                        value={this.props.searchProduct}
+                        onChangeText={this.handleChange}
+                    />
+                    </View>
                      <ProductList
-                     products={this.props.products}
+                     products={products}
                      onItemSelected={this.itemSelectedHandler}
                      />
                  </Animated.View>
@@ -135,13 +161,16 @@ class ViewProduct extends Component  {
  
  const mapStateToProps = state => {
      return{
-         products: state.products.products
+         products: state.products.products,
+         searchProduct: state.products.searchProduct
      }
  }
  
  const mapDispatchToProps = dispatch => {
      return {
-         onLoadProducts: () => dispatch(getProducts())
+         onLoadProducts: () => dispatch(getProducts()),
+         onSearchProduct: (val) => dispatch(searchProduct(val)),
+         onStopSearchProduct: () => dispatch(stopSearchProduct())
      }
  }
  

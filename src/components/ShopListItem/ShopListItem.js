@@ -418,6 +418,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         isLoading: state.ui.isLoading,
+        searchShop: state.shops.searchShop
     }
 }
 

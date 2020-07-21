@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import {connect} from 'react-redux';
-import {addProduct,  startAddProduct} from '../../store/actions/index'
+import {addProduct, startAddProduct, getProducts} from '../../store/actions/index'
 
 import PickImage from '../../components/PickImage/PickImage'
 import validate from '../../utils/validation'
@@ -128,6 +128,8 @@ class AddProduct extends Component {
         alert(`You added ${this.state.controls.productName.value}`)
         this.reset()
         this.imagePicker.reset()
+        //this.props.onLoadProducts()
+        console.log(this.props.products)
         //this.locationPicker.reset()
     }
 
@@ -209,14 +211,17 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         isLoading: state.ui.isLoading,
-        productAdded: state.products.productAdded
+        productAdded: state.products.productAdded,
+        products: state.products.products
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
         onAddProduct: (productName, location,image) => dispatch(addProduct(productName, location, image)),
-        onStartAddProduct: () => dispatch(startAddProduct())
+        onStartAddProduct: () => dispatch(startAddProduct()),
+        onLoadProducts: () => dispatch(getProducts())
+
     }
 }
 

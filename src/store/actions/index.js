@@ -2,5 +2,5 @@
 export { deletePlace, getPlaces, addPlace, startAddPlace, placeAdded} from './places'
 export {tryAuth, authGetToken, authAutoSignIn, authLogout} from './auth'
 export { uiStartLoading, uiStopLoading } from './ui'
-export {addProduct,productAdded,startAddProduct,getProducts, deleteProduct, updateProduct, startUpdateProduct, stopUpdateProduct } from './products'
-export {addShop,shopAdded,startAddShop,getShops, deleteShop, updateShop, } from './shops'
+export {addProduct,productAdded,startAddProduct,getProducts, deleteProduct, updateProduct, startUpdateProduct, stopUpdateProduct, searchProduct, stopSearchProduct} from './products'
+export {addShop,shopAdded,startAddShop,getShops, deleteShop, updateShop, searchShop, stopSearchShop } from './shops'

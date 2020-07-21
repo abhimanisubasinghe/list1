@@ -17,12 +17,6 @@ class Home extends Component {
             <Title>Home</Title>
           </Body>
           <Right>
-            {/* <Button transparent>
-              <Icon name='search' />
-            </Button>
-            <Button transparent>
-              <Icon name='heart' />
-            </Button> */}
             <Button transparent onPress={() => this.props.navigation.toggleDrawer()}>
               <Icon name="bars" size={30} color="white" />
             </Button>

@@ -1,4 +1,4 @@
-import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, START_UPDATE_PRODUCT, STOP_UPDATE_PRODUCT} from './actionType'
+import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, START_UPDATE_PRODUCT, STOP_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 export const startAddProduct = () => {
@@ -74,11 +74,13 @@ export const addProduct = (productName, productDescription, image) => {
           console.log(parsedRes);
           dispatch(uiStopLoading());
           dispatch(productAdded())
+          dispatch(getProducts())
         })
         .catch(err => {
           console.log(err);
           alert("Something went wrong, please try again!");
           dispatch(uiStopLoading());
+          dispatch(getProducts())
         });
     };
   };
@@ -235,3 +237,16 @@ export const removeProduct = key => {
         key: key
     };
 };
+
+export const searchProduct = val => {
+  return {
+    type: SEARCH_PRODUCT,
+    val: val
+  }
+}
+
+export const stopSearchProduct = () => {
+  return {
+    type: STOP_SEARCH_PRODUCT
+  }
+}

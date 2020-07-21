@@ -26,7 +26,8 @@ export const tryAuth = (authData, nav, authMode) => {
       data = {
         email: authData.email,
         password: authData.password,
-        // userName: authData.userName,
+        displayName: authData.userName,
+        contactNumber: authData.contactNumber,
         returnSecureToken: true,
       };
     }
@@ -35,7 +36,8 @@ export const tryAuth = (authData, nav, authMode) => {
       body: JSON.stringify({
         email: authData.email,
         password: authData.password,
-        //userName: authData.userName,
+        displayName: authData.userName,
+        //contactNumber: authData.contactNumber,
         returnSecureToken: true,
       }),
       headers: {
@@ -59,28 +61,45 @@ export const tryAuth = (authData, nav, authMode) => {
           alert('Authentication failed! Please try again ');
         } else {
           console.log('P!', prasedRes);
+          console.log('P!', prasedRes.displayName);
           dispatch(
             authStoreToken(
               prasedRes.idToken,
               prasedRes.expiresIn,
               prasedRes.refreshToken,
+              prasedRes.email,
+              prasedRes.displayName,
+              prasedRes.localId
             ),
           );
-          nav.navigation.push('Drawer');
+          nav.navigation.push('Drawer',{
+            email: prasedRes.email,
+            name:prasedRes.displayName,
+            Id:prasedRes.localId
+          });
         }
       });
   };
 };
 
-export const authStoreToken = (token, expiresIn, refreshToken) => {
+export const authStoreToken = (token, expiresIn, refreshToken, email, name, Id) => {
   return (dispatch) => {
     const now = new Date();
     const expiryDate = now.getTime() + expiresIn * 1000;
     dispatch(authSetToken(token, expiryDate));
     //console.log(now, new Date(expiryDate))
+    console.log(name)
     AsyncStorage.setItem('list1:auth:token', token);
     AsyncStorage.setItem('list1:auth:expiryDate', expiryDate.toString());
     AsyncStorage.setItem('list1:auth:refreshToken', refreshToken);
+    AsyncStorage.setItem('list1:auth:email', email)
+    AsyncStorage.setItem('list1:auth:name', name)
+    AsyncStorage.setItem('list1:auth:ID', Id)
+    // console.log('name',(AsyncStorage.getItem('list1:auth:name')).toString())
+    // return((AsyncStorage.getItem('list1:auth:name')))
+    // .then(name){
+    //   console.log(name)
+    // }
   };
 };
 
@@ -174,7 +193,15 @@ export const authAutoSignIn = (nav) => {
   return (dispatch) => {
     dispatch(authGetToken())
       .then((token) => {
-        nav.navigation.push('Drawer');
+        const email = AsyncStorage.getItem('list1:auth:email');
+        const name = AsyncStorage.getItem('list1:auth:name');
+        const Id = AsyncStorage.getItem('list1:auth:Id');
+        console.log(email)
+        nav.navigation.push('Drawer',{
+          //email: email,
+          //name: name,
+          //Id: Id
+        });
       })
       .catch((err) => console.log('Failed to fetch token'));
   };
@@ -184,6 +211,9 @@ export const authClearStorage = () => {
   return (dispatch) => {
     AsyncStorage.removeItem('list1:auth:expiryDate');
     AsyncStorage.removeItem('list1:auth:token');
+    AsyncStorage.removeItem('list1:auth:email');
+    AsyncStorage.removeItem('list1:auth:name');
+    AsyncStorage.removeItem('list1:auth:Id');
     return AsyncStorage.removeItem('list1:auth:refreshToken');
   };
 };

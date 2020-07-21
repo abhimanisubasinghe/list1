@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
+import {connect} from 'react-redux';
+import {authLogout} from '../../store/actions/index'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
     createDrawerNavigator,
@@ -44,15 +46,12 @@ function CustomDrawerContent({ progress, ...rest }) {
           <View>
             <Text>Hello Raven!</Text>
           </View>
-          <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity>    
           <DrawerItem 
           label="LogOut" 
-          onPress={() => alert('Log out')} 
+          onPress={() =>{rest.children(rest)}} 
+          icon = {() => <Icon color='white' size={20} name='sign-out-alt' />}
+          inactiveTintColor= 'white'
           />
-          <MapIcon/>
-          </TouchableOpacity>
-          </View>
           <DrawerItemList {...rest} />
         </Animated.View>
       </DrawerContentScrollView>
@@ -61,9 +60,13 @@ function CustomDrawerContent({ progress, ...rest }) {
 
 const Drawer = createDrawerNavigator();
 
-function MyDrawer() {
+function MyDrawer(data) {
+  console.log('user',data.route.params)
   return (
-    <Drawer.Navigator initialRouteName="Feed" drawerContent={props => <CustomDrawerContent {...props} />} 
+    <Drawer.Navigator initialRouteName="Feed" drawerContent={props => <CustomDrawerContent {...props} >
+      {data.onLogOut}
+    </CustomDrawerContent>  
+      } 
     drawerContentOptions={{
         activeTintColor:'#6a3982',
         activeBackgroundColor: 'white',
@@ -88,7 +91,7 @@ function MyDrawer() {
         options={{ 
             drawerLabel:  'Home', 
             activeTintColor:'purple',
-            drawerIcon: props => <MapIcon {... props}/>,
+            drawerIcon: () => <Icon color='white' size={20} name='home' />,
             color: 'white',
             contentOptions:{
               labelStyle:{
@@ -103,20 +106,37 @@ function MyDrawer() {
       <Drawer.Screen
         name="Groups"
         component={Groups}
-        options={{ drawerLabel: 'Groups' }}
+        options={{ 
+          drawerLabel: 'Groups',
+          drawerIcon: () => <Icon color='white' size={20} name='users' />
+       }}
       />
       <Drawer.Screen
         name="Shops"
         component={Shops}
-        options={{ drawerLabel: 'Shops' }}
+        options={{ 
+          drawerLabel: 'Shops' ,
+          drawerIcon: () => <Icon color='white' size={20} name='shopping-cart' />
+        }}
       />
       <Drawer.Screen
         name="Products"
         component={Products}
-        options={{ drawerLabel: 'Products' }}
+        options={{ 
+          drawerLabel: 'Products',
+          drawerIcon: () => <Icon color='white' size={20} name='shopping-basket' /> 
+        }}
+        
       />
     </Drawer.Navigator>
   );
 }
 
-export default MyDrawer;
+const mapDispatchToProps = dispatch => {
+  return {
+      onLogOut: (nav) => dispatch(authLogout(nav))
+  }
+}
+
+
+export default connect(null, mapDispatchToProps) (MyDrawer);
