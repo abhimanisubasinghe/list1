@@ -83,6 +83,13 @@ export const tryAuth = (authData, nav, authMode) => {
 };
 
 export const authStoreToken = (token, expiresIn, refreshToken, email, name, Id) => {
+
+  // if(email===null){
+  //   email = await AsyncStorage.getItem('list1:auth:email');
+  //   name = await AsyncStorage.getItem('list1:auth:name');
+  //   Id = await AsyncStorage.getItem('list1:auth:Id');
+  // }
+
   return (dispatch) => {
     const now = new Date();
     const expiryDate = now.getTime() + expiresIn * 1000;
@@ -94,7 +101,7 @@ export const authStoreToken = (token, expiresIn, refreshToken, email, name, Id) 
     AsyncStorage.setItem('list1:auth:refreshToken', refreshToken);
     AsyncStorage.setItem('list1:auth:email', email)
     AsyncStorage.setItem('list1:auth:name', name)
-    AsyncStorage.setItem('list1:auth:ID', Id)
+    AsyncStorage.setItem('list1:auth:Id', Id)
     // console.log('name',(AsyncStorage.getItem('list1:auth:name')).toString())
     // return((AsyncStorage.getItem('list1:auth:name')))
     // .then(name){
@@ -103,11 +110,14 @@ export const authStoreToken = (token, expiresIn, refreshToken, email, name, Id) 
   };
 };
 
-export const authSetToken = (token, expiryDate) => {
+export const authSetToken = (token, expiryDate,email, name, Id ) => {
   return {
     type: AUTH_SET_TOKEN,
     token: token,
     expiryDate: expiryDate,
+    email: email,
+    name: name,
+    Id: Id
   };
 };
 
@@ -192,15 +202,15 @@ export const authGetToken = () => {
 export const authAutoSignIn = (nav) => {
   return (dispatch) => {
     dispatch(authGetToken())
-      .then((token) => {
-        const email = AsyncStorage.getItem('list1:auth:email');
-        const name = AsyncStorage.getItem('list1:auth:name');
-        const Id = AsyncStorage.getItem('list1:auth:Id');
-        console.log(email)
+      .then(async(token) => {
+        const email = await AsyncStorage.getItem('list1:auth:email');
+        const name = await AsyncStorage.getItem('list1:auth:name');
+        const Id = await AsyncStorage.getItem('list1:auth:Id');
+        //console.log(email)
         nav.navigation.push('Drawer',{
-          //email: email,
-          //name: name,
-          //Id: Id
+          email: email,
+          name: name,
+          Id: Id
         });
       })
       .catch((err) => console.log('Failed to fetch token'));

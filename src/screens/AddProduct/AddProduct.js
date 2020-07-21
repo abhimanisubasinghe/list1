@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image, ActivityIndicator } from 'react-native';
 import {connect} from 'react-redux';
-import {addProduct, startAddProduct, getProducts} from '../../store/actions/index'
+import {addProduct, startAddProduct, getProducts, getUserProducts} from '../../store/actions/index'
 
 import PickImage from '../../components/PickImage/PickImage'
 import validate from '../../utils/validation'
@@ -98,6 +98,7 @@ class AddProduct extends Component {
     }
 
     componentDidMount(){
+        console.log('product owner',this.props.user.Id)
         this.reset()
     }
 
@@ -124,7 +125,8 @@ class AddProduct extends Component {
     }
 
     productAddedHandler = () => {
-        this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value)
+        console.log(this.props.user.Id)
+        this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value,this.props.user.Id)
         alert(`You added ${this.state.controls.productName.value}`)
         this.reset()
         this.imagePicker.reset()
@@ -212,16 +214,17 @@ const mapStateToProps = state => {
     return {
         isLoading: state.ui.isLoading,
         productAdded: state.products.productAdded,
-        products: state.products.products
+        products: state.products.products,
+        userId: state.auth.Id
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
-        onAddProduct: (productName, location,image) => dispatch(addProduct(productName, location, image)),
+        onAddProduct: (productName, location,image, userId) => dispatch(addProduct(productName, location, image, userId)),
         onStartAddProduct: () => dispatch(startAddProduct()),
-        onLoadProducts: () => dispatch(getProducts())
-
+        onLoadProducts: () => dispatch(getProducts()),
+        onLoadUserProducts: (userId) => dispatch(getUserProducts(userId))
     }
 }
 

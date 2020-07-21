@@ -1,7 +1,7 @@
 import React, {Component}  from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native'
 import {connect} from 'react-redux'
-import {getProducts, searchProduct, stopSearchProduct} from '../../store/actions/index'
+import {getProducts, searchProduct, stopSearchProduct, getUserProducts} from '../../store/actions/index'
 //import ProductList from '../../components/ProductList/ProductList'
 import ProductList from '../../components/ProductList/ProductList'
 //import ProductListItem from '../../components/'
@@ -19,7 +19,8 @@ class ViewProduct extends Component  {
  
      componentDidMount(){
          console.log('loading')
-         this.props.onLoadProducts()
+         //this.props.onLoadProducts()
+         this.props.onLoadUserProducts(this.props.user.Id)
          this.props.onStopSearchProduct()
          
      }
@@ -170,7 +171,8 @@ class ViewProduct extends Component  {
      return {
          onLoadProducts: () => dispatch(getProducts()),
          onSearchProduct: (val) => dispatch(searchProduct(val)),
-         onStopSearchProduct: () => dispatch(stopSearchProduct())
+         onStopSearchProduct: () => dispatch(stopSearchProduct()),
+         onLoadUserProducts: (userId) => dispatch(getUserProducts(userId))
      }
  }
  

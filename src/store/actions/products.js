@@ -7,11 +7,13 @@ export const startAddProduct = () => {
   }
 }
 
-export const addProduct = (productName, productDescription, image) => {
+export const addProduct = (productName, productDescription, image, userId) => {
     //console.log(productName, productDescription)
-    return dispatch => {
+    return (dispatch, getState) => {
       let authToken;
+      //let userId;
       dispatch(uiStartLoading());
+      //userId = getState().auth.Id;
       dispatch(authGetToken())
         .catch(() => {
           alert("No valid token found!");
@@ -19,6 +21,7 @@ export const addProduct = (productName, productDescription, image) => {
         .then(token => {
           //console.log('token',token)
           authToken = token;
+          
           return fetch(
             "https://us-central1-list1-9090.cloudfunctions.net/storeImage",
             {
@@ -47,11 +50,13 @@ export const addProduct = (productName, productDescription, image) => {
             }
           })
         .then(parsedRes => {
+          console.log(userId)
           const productData = {
             name: productName,
             description: productDescription,
             image: parsedRes.imageUrl,
-            imagePath: parsedRes.imagePath
+            imagePath: parsedRes.imagePath,
+            userId: userId
           };
           return fetch(
             "https://list1-9090.firebaseio.com/products.json?auth=" +
@@ -89,6 +94,47 @@ export const productAdded = () => {
   return{
     type: PRODUCT_ADDED
   }
+}
+
+export const getUserProducts = (userId) => {
+  console.log('in user get products',userId)
+  return (dispatch) =>{
+  dispatch(authGetToken())
+  .catch(() =>{
+      alert('No valid token found')
+  })
+  .then(token =>{
+      console.log(token)
+      const field = '"userId"'
+      return fetch(`https://list1-9090.firebaseio.com/products.json?orderBy="$key"&auth=`+token)
+  })
+  .then(res =>  {
+    if(res.ok){
+      return res.json()
+    }
+    else{
+      throw (new Error())
+    }
+  })
+  .then(parsedRes => {
+      const products = [] 
+      for (let key in parsedRes){
+          products.push({
+              ...parsedRes[key],
+              image:{
+                  uri: parsedRes[key].image
+              } ,
+              key:key
+          })
+      }
+      console.log('loding data')
+      dispatch(setProducts(products))
+  })
+  .catch(err => {
+      alert('Something went wrong, sorry :/')
+      console.log(err)
+  })
+}
 }
 
 export const getProducts = () => {
