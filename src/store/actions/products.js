@@ -1,6 +1,7 @@
 import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, START_UPDATE_PRODUCT, STOP_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
+
 export const startAddProduct = () => {
   return{
     type: START_ADD_PRODUCT
@@ -79,13 +80,13 @@ export const addProduct = (productName, productDescription, image, userId) => {
           console.log(parsedRes);
           dispatch(uiStopLoading());
           dispatch(productAdded())
-          dispatch(getProducts())
+          dispatch(getUserProducts(userId))
         })
         .catch(err => {
           console.log(err);
           alert("Something went wrong, please try again!");
           dispatch(uiStopLoading());
-          dispatch(getProducts())
+          dispatch(getUserProducts(userId))
         });
     };
   };
@@ -106,7 +107,7 @@ export const getUserProducts = (userId) => {
   .then(token =>{
       console.log(token)
       const field = '"userId"'
-      return fetch(`https://list1-9090.firebaseio.com/products.json?orderBy="$key"&auth=`+token)
+      return fetch(`https://list1-9090.firebaseio.com/products.json?auth=`+token)
   })
   .then(res =>  {
     if(res.ok){
@@ -117,7 +118,7 @@ export const getUserProducts = (userId) => {
     }
   })
   .then(parsedRes => {
-      const products = [] 
+      let products = [] 
       for (let key in parsedRes){
           products.push({
               ...parsedRes[key],
@@ -127,6 +128,7 @@ export const getUserProducts = (userId) => {
               key:key
           })
       }
+      products = products.filter(item => item.userId.match(userId));
       console.log('loding data')
       dispatch(setProducts(products))
   })
@@ -137,44 +139,44 @@ export const getUserProducts = (userId) => {
 }
 }
 
-export const getProducts = () => {
-    return (dispatch) =>{
-    dispatch(authGetToken())
-    .catch(() =>{
-        alert('No valid token found')
-    })
-    .then(token =>{
-        console.log(token)
-        return fetch('https://list1-9090.firebaseio.com/products.json?auth='+token)
-    })
-    .then(res =>  {
-      if(res.ok){
-        return res.json()
-      }
-      else{
-        throw (new Error())
-      }
-    })
-    .then(parsedRes => {
-        const products = [] 
-        for (let key in parsedRes){
-            products.push({
-                ...parsedRes[key],
-                image:{
-                    uri: parsedRes[key].image
-                } ,
-                key:key
-            })
-        }
-        console.log('loding data')
-        dispatch(setProducts(products))
-    })
-    .catch(err => {
-        alert('Something went wrong, sorry :/')
-        console.log(err)
-    })
-}
-}
+// export const getProducts = () => {
+//     return (dispatch) =>{
+//     dispatch(authGetToken())
+//     .catch(() =>{
+//         alert('No valid token found')
+//     })
+//     .then(token =>{
+//         console.log(token)
+//         return fetch('https://list1-9090.firebaseio.com/products.json?auth='+token)
+//     })
+//     .then(res =>  {
+//       if(res.ok){
+//         return res.json()
+//       }
+//       else{
+//         throw (new Error())
+//       }
+//     })
+//     .then(parsedRes => {
+//         const products = [] 
+//         for (let key in parsedRes){
+//             products.push({
+//                 ...parsedRes[key],
+//                 image:{
+//                     uri: parsedRes[key].image
+//                 } ,
+//                 key:key
+//             })
+//         }
+//         console.log('loding data')
+//         dispatch(setProducts(products))
+//     })
+//     .catch(err => {
+//         alert('Something went wrong, sorry :/')
+//         console.log(err)
+//     })
+// }
+// }
 
 export const setProducts = (products) => {
     //console.log(products)
@@ -263,7 +265,7 @@ export const updateProduct = (key, productName, productDescription) => {
         .then(parsedRes => {
             console.log("Done!");
             dispatch(uiStopLoading());
-            dispatch(getProducts());
+            dispatch(getUserProducts());
             dispatch(stopUpdateProduct());
         })
         .catch(err => {

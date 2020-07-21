@@ -84,16 +84,17 @@ export const tryAuth = (authData, nav, authMode) => {
 
 export const authStoreToken = (token, expiresIn, refreshToken, email, name, Id) => {
 
-  // if(email===null){
-  //   email = await AsyncStorage.getItem('list1:auth:email');
-  //   name = await AsyncStorage.getItem('list1:auth:name');
-  //   Id = await AsyncStorage.getItem('list1:auth:Id');
-  // }
+  
 
-  return (dispatch) => {
+  return async(dispatch) => {
     const now = new Date();
     const expiryDate = now.getTime() + expiresIn * 1000;
     dispatch(authSetToken(token, expiryDate));
+    if(email===null){
+      email = await AsyncStorage.getItem('list1:auth:email');
+      name = await AsyncStorage.getItem('list1:auth:name');
+      Id = await AsyncStorage.getItem('list1:auth:Id');
+    }
     //console.log(now, new Date(expiryDate))
     console.log(name)
     AsyncStorage.setItem('list1:auth:token', token);

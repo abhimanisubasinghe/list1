@@ -1,7 +1,7 @@
 import React, {Component}  from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native'
 import {connect} from 'react-redux'
-import {getProducts, searchProduct, stopSearchProduct, getUserProducts} from '../../store/actions/index'
+import {searchProduct, stopSearchProduct, getUserProducts} from '../../store/actions/index'
 //import ProductList from '../../components/ProductList/ProductList'
 import ProductList from '../../components/ProductList/ProductList'
 //import ProductListItem from '../../components/'
@@ -100,6 +100,8 @@ class ViewProduct extends Component  {
         products = products.filter(item => item.name.toLowerCase().match(product));
         }
  
+        products = products.filter(item => item.userId.toLowerCase().match(this.props.userId));
+
          if(this.state.productsLoaded){
              content = (
                  <Animated.View style={{
@@ -169,7 +171,7 @@ class ViewProduct extends Component  {
  
  const mapDispatchToProps = dispatch => {
      return {
-         onLoadProducts: () => dispatch(getProducts()),
+         //onLoadProducts: () => dispatch(getProducts()),
          onSearchProduct: (val) => dispatch(searchProduct(val)),
          onStopSearchProduct: () => dispatch(stopSearchProduct()),
          onLoadUserProducts: (userId) => dispatch(getUserProducts(userId))
