@@ -1,5 +1,5 @@
 import {TRY_AUTH, AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN} from './actionType';
-import {uiStartLoading, uiStopLoading} from './index';
+import {uiStartLoading, uiStopLoading, addUser} from './index';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const API = 'AIzaSyDOkMm4RadBTwj265BCOVVTVvkgIqUdUtY';
@@ -9,8 +9,9 @@ export const tryAuth = (authData, nav, authMode) => {
     dispatch(uiStartLoading());
     let url = null;
     let data = null;
-    console.log(authData.email);
-    console.log(authData.password);
+    const signUpdata = authData;
+    //console.log(authData.email);
+    //console.log(authData.password);
     if (authMode === 'login') {
       url =
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' +
@@ -72,6 +73,16 @@ export const tryAuth = (authData, nav, authMode) => {
               prasedRes.localId
             ),
           );
+          if(authMode !== 'login'){
+            // let data = {
+            //   userName: signUpdata.userName,
+            //   contactNumber: signUpdata.contactNumber,
+            //   authData
+            // } 
+
+            console.log('from auth', signUpdata)
+            dispatch(addUser(signUpdata))  
+          }
           nav.navigation.push('Drawer',{
             email: prasedRes.email,
             name:prasedRes.displayName,

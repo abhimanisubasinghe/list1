@@ -31,14 +31,14 @@ class Auth extends Component {
                 },
                 touched : false
             },
-            // contactNumber: {
-            //     value: "",
-            //     valid: false,  
-            //     validationRules:{
-            //         isPhone: true
-            //     },
-            //     touched : false
-            // },
+            contactNumber: {
+                value: "",
+                valid: false,  
+                validationRules:{
+                    isPhone: true
+                },
+                touched : false
+            },
             password: {
                 value: "",
                 valid: false,
@@ -158,7 +158,7 @@ class Auth extends Component {
                 email : this.state.controls.email.value,
                 password: this.state.controls.password.value,
                 userName: this.state.controls.userName.value,
-                //contactNumber: this.state.controls.contactNumber.value
+                contactNumber: this.state.controls.contactNumber.value
             }
             if(this.state.controls.email.valid === true && this.state.controls.password.valid === true && this.state.controls.userName.valid === true && this.state.controls.confirmPassword.valid === true){
                 this.props.onAuth(signupData,this.props,this.state.mode)
@@ -176,7 +176,7 @@ class Auth extends Component {
     render(){
         const {errorAlert} = this.state;
         let userName = null
-       // let contactNumber = null
+        let contactNumber = null
         let confirmPassword = null
         let heading = <Text style={styles.heading}>Login</Text>
 
@@ -204,16 +204,16 @@ class Auth extends Component {
                     touched= {this.state.controls.userName.touched}
                 />
             )
-            // contactNumber = (
-            //     <DefaultInput
-            //         placeholder='Phone number'
-            //         style={styles.input}
-            //         value={this.state.controls.contactNumber.value}
-            //         onChangeText = {(val) => this.updateInputState('contactNumber',val)}
-            //         valid = {this.state.controls.contactNumber.valid}
-            //         touched= {this.state.controls.contactNumber.touched}
-            //     />
-            // )
+            contactNumber = (
+                <DefaultInput
+                    placeholder='Phone number'
+                    style={styles.input}
+                    value={this.state.controls.contactNumber.value}
+                    onChangeText = {(val) => this.updateInputState('contactNumber',val)}
+                    valid = {this.state.controls.contactNumber.valid}
+                    touched= {this.state.controls.contactNumber.touched}
+                />
+            )
             confirmPassword = (
                 <DefaultInput
                     placeholder='Confirm password'
@@ -236,7 +236,7 @@ class Auth extends Component {
                         {this.state.mode === 'login' ? <Text style={styles.subHeading}> Switch to SignUP </Text> : <Text style={styles.subHeading}> Switch to Login </Text>}
                     </DefaultButton>
                     {userName}
-                    {/* {contactNumber} */}
+                    {contactNumber}
                     <DefaultInput
                         placeholder='Email'
                         style={styles.input}

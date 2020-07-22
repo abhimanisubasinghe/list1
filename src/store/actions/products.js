@@ -57,7 +57,7 @@ export const addProduct = (productName, productDescription, image, userId) => {
             description: productDescription,
             image: parsedRes.imageUrl,
             imagePath: parsedRes.imagePath,
-            userId: userId
+            userId: [userId]
           };
           return fetch(
             "https://list1-9090.firebaseio.com/products.json?auth=" +
@@ -128,7 +128,10 @@ export const getUserProducts = (userId) => {
               key:key
           })
       }
-      products = products.filter(item => item.userId.match(userId));
+      products = products.filter(item => item.userId.find(id => {
+        //console.log(id, userId, id.includes(userId))
+        return id.includes(userId)
+      }));
       console.log('loding data')
       dispatch(setProducts(products))
   })

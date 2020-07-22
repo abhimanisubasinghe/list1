@@ -100,7 +100,9 @@ class ViewProduct extends Component  {
         products = products.filter(item => item.name.toLowerCase().match(product));
         }
  
-        products = products.filter(item => item.userId.toLowerCase().match(this.props.userId));
+        //products = products.filter(item => item.userId.match(this.props.userId));
+
+       // products = products.filter(item => item.userId.filter(id => id.includes(this.props.userId)));
 
          if(this.state.productsLoaded){
              content = (
