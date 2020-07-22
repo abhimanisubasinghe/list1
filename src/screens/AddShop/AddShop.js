@@ -188,7 +188,7 @@ class AddShop extends Component {
         alert(`You added ${this.state.controls.shopName.value}`)
         this.reset()
         this.locationPicker.reset()
-        this.props.onLoadShops()
+       // this.props.onLoadShops()
     }
 
     render() {

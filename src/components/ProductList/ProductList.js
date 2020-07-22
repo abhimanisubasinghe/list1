@@ -18,6 +18,8 @@ const productList = (props) => {
                 productImage= {info.item.image}
                 productDescription = {info.item.description}
                 productKey = {info.item.key}
+                productOwner = {info.item.owner}
+                productSharedUsers = {info.item.sharedUsers}
                 onItemPressed = {() => props.onItemSelected(info.item.key)}
             />
         )}

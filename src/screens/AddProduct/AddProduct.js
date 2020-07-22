@@ -98,7 +98,7 @@ class AddProduct extends Component {
     }
 
     componentDidMount(){
-        console.log('product owner',this.props.user.Id)
+        //console.log('product owner',this.props.user.Id)
         this.reset()
     }
 
@@ -125,8 +125,8 @@ class AddProduct extends Component {
     }
 
     productAddedHandler = () => {
-        console.log(this.props.user.Id)
-        this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value,this.props.user.Id)
+        //console.log(this.props.user.Id)
+        this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value,this.props.email)
         alert(`You added ${this.state.controls.productName.value}`)
         this.reset()
         this.imagePicker.reset()
@@ -215,7 +215,9 @@ const mapStateToProps = state => {
         isLoading: state.ui.isLoading,
         productAdded: state.products.productAdded,
         products: state.products.products,
-        userId: state.auth.Id
+        email: state.users.loggedUserEmail,
+        userName: state.users.loggedUserName,
+        contactNumber: state.users.loggedUserContactNumber,
     }
 }
 

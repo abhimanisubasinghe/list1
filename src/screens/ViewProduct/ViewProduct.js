@@ -20,7 +20,7 @@ class ViewProduct extends Component  {
      componentDidMount(){
          console.log('loading')
          //this.props.onLoadProducts()
-         this.props.onLoadUserProducts(this.props.user.Id)
+         this.props.onLoadUserProducts(this.props.email)
          this.props.onStopSearchProduct()
          
      }
@@ -167,7 +167,10 @@ class ViewProduct extends Component  {
  const mapStateToProps = state => {
      return{
          products: state.products.products,
-         searchProduct: state.products.searchProduct
+         searchProduct: state.products.searchProduct,
+         email: state.users.loggedUserEmail,
+         userName: state.users.loggedUserName,
+         contactNumber: state.users.loggedUserContactNumber,
      }
  }
  

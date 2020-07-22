@@ -30,10 +30,10 @@ class Products extends Component {
             </Header>
             <Tabs style={styles.header} backgroundColor='#6a3982' renderTabBar={()=> <ScrollableTab style={styles.header} tabsContainerStyle={{shadowColor:'#6a3982', borderColor:'#6a3982', backgroundColor:'#6a3982'}}/>}>
             <Tab heading="View" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
-                <ViewProduct user={this.props.user}/>
+                <ViewProduct />
               </Tab>
               <Tab heading="Add" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
-                <AddProduct user={this.props.user}/>
+                <AddProduct/>
               </Tab>        
             </Tabs>
           </Container>    

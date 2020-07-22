@@ -50,11 +50,13 @@ export const addShop = (shopName, shopDescription, shopLocation) => {
         .then(parsedRes => {
           console.log(parsedRes);
           dispatch(uiStopLoading());
+          dispatch(getShops())
           dispatch(shopAdded())
         })
         .catch(err => {
           console.log(err);
           alert("Something went wrong, please try again!");
+          dispatch(getShops())
           dispatch(uiStopLoading());
         });
     };

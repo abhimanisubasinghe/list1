@@ -62,7 +62,7 @@ class productListItem  extends React.Component {
         console.log(this.props.productKey)
         const productName = (this.state.controls.productName.value?this.state.controls.productName.value: this.props.productName )
         const productDescription = (this.state.controls.productDetail.value?this.state.controls.productDetail.value: this.props.productDescription )
-        this.props.onUpdateProduct(this.props.productKey, productName, productDescription);
+        this.props.onUpdateProduct(this.props.productKey, productName, productDescription, this.props.productOwner, this.props.productSharedUsers);
         this.reset()
         //this.props.product.navigation.dispatch(popAction);
     }
@@ -94,6 +94,7 @@ class productListItem  extends React.Component {
     }
 
     componentDidMount(){
+        console.log(this.props.productSharedUsers)
         this.reset()
     }
 
@@ -286,7 +287,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return{
         onDeleteProduct: (key) => dispatch(deleteProduct(key)),
-        onUpdateProduct: (key, productName, productDescription) => dispatch(updateProduct(key, productName, productDescription))
+        onUpdateProduct: (key, productName, productDescription,owner, sharedUsers) => dispatch(updateProduct(key, productName, productDescription, owner, sharedUsers))
     }
 }
 

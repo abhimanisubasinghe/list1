@@ -99,13 +99,14 @@ export const authStoreToken = (token, expiresIn, refreshToken, email, name, Id) 
     const now = new Date();
     const expiryDate = now.getTime() + expiresIn * 1000;
     dispatch(authSetToken(token, expiryDate));
-    if(email===null){
+    console.log('async email', email)
+    if(email=== undefined){
       email = await AsyncStorage.getItem('list1:auth:email');
       name = await AsyncStorage.getItem('list1:auth:name');
       Id = await AsyncStorage.getItem('list1:auth:Id');
     }
     //console.log(now, new Date(expiryDate))
-    console.log(name)
+    console.log('initialized mail', email)
     AsyncStorage.setItem('list1:auth:token', token);
     AsyncStorage.setItem('list1:auth:expiryDate', expiryDate.toString());
     AsyncStorage.setItem('list1:auth:refreshToken', refreshToken);

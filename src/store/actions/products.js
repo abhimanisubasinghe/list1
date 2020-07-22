@@ -8,7 +8,7 @@ export const startAddProduct = () => {
   }
 }
 
-export const addProduct = (productName, productDescription, image, userId) => {
+export const addProduct = (productName, productDescription, image, userEmail) => {
     //console.log(productName, productDescription)
     return (dispatch, getState) => {
       let authToken;
@@ -51,13 +51,14 @@ export const addProduct = (productName, productDescription, image, userId) => {
             }
           })
         .then(parsedRes => {
-          console.log(userId)
+          //console.log(userId)
           const productData = {
             name: productName,
             description: productDescription,
             image: parsedRes.imageUrl,
             imagePath: parsedRes.imagePath,
-            userId: [userId]
+            owner: userEmail,
+            sharedUsers: [userEmail]
           };
           return fetch(
             "https://list1-9090.firebaseio.com/products.json?auth=" +
@@ -80,13 +81,13 @@ export const addProduct = (productName, productDescription, image, userId) => {
           console.log(parsedRes);
           dispatch(uiStopLoading());
           dispatch(productAdded())
-          dispatch(getUserProducts(userId))
+          dispatch(getUserProducts(userEmail))
         })
         .catch(err => {
           console.log(err);
           alert("Something went wrong, please try again!");
           dispatch(uiStopLoading());
-          dispatch(getUserProducts(userId))
+          dispatch(getUserProducts(userEmail))
         });
     };
   };
@@ -97,16 +98,15 @@ export const productAdded = () => {
   }
 }
 
-export const getUserProducts = (userId) => {
-  console.log('in user get products',userId)
+export const getUserProducts = (email) => {
+  console.log('in user get products',email)
   return (dispatch) =>{
   dispatch(authGetToken())
   .catch(() =>{
       alert('No valid token found')
   })
   .then(token =>{
-      console.log(token)
-      const field = '"userId"'
+      //console.log(token)
       return fetch(`https://list1-9090.firebaseio.com/products.json?auth=`+token)
   })
   .then(res =>  {
@@ -128,9 +128,9 @@ export const getUserProducts = (userId) => {
               key:key
           })
       }
-      products = products.filter(item => item.userId.find(id => {
+      products = products.filter(item => item.sharedUsers.find(shareEmail => {
         //console.log(id, userId, id.includes(userId))
-        return id.includes(userId)
+        return shareEmail.includes(email)
       }));
       console.log('loding data')
       dispatch(setProducts(products))
@@ -235,8 +235,8 @@ export const stopUpdateProduct = () => {
   }
 }
 
-export const updateProduct = (key, productName, productDescription) => {
-  //console.log(key)
+export const updateProduct = (key, productName, productDescription, owner, sharedUsers) => {
+  console.log(owner)
     return (dispatch) => {
         dispatch(uiStartLoading());
         dispatch(authGetToken())
@@ -249,6 +249,8 @@ export const updateProduct = (key, productName, productDescription) => {
             const productData = {
               name: productName,
               description: productDescription,
+              owner: owner,
+              sharedUsers: sharedUsers
             };
             return fetch("https://list1-9090.firebaseio.com/products/" + key + ".json?auth="+token, {
                 method: "PATCH",
@@ -268,13 +270,14 @@ export const updateProduct = (key, productName, productDescription) => {
         .then(parsedRes => {
             console.log("Done!");
             dispatch(uiStopLoading());
-            dispatch(getUserProducts());
+            dispatch(getUserProducts(owner));
             dispatch(stopUpdateProduct());
         })
         .catch(err => {
             alert("Something went wrong, sorry :/");
             console.log(err);
             dispatch(uiStopLoading());
+            dispatch(getUserProducts(owner));
             dispatch(stopUpdateProduct());
             
         })        
