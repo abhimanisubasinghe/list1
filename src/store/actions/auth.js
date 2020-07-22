@@ -1,6 +1,7 @@
 import {TRY_AUTH, AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN} from './actionType';
 import {uiStartLoading, uiStopLoading, addUser} from './index';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getLoggedUser } from './users';
 
 const API = 'AIzaSyDOkMm4RadBTwj265BCOVVTVvkgIqUdUtY';
 
@@ -54,7 +55,7 @@ export const tryAuth = (authData, nav, authMode) => {
         console.log(res);
         return res.json();
       })
-      .then((prasedRes) => {
+      .then(async(prasedRes) => {
         dispatch(uiStopLoading());
         //console.log(prasedRes.idToken)
         console.log('P!', prasedRes);
@@ -74,16 +75,13 @@ export const tryAuth = (authData, nav, authMode) => {
             ),
           );
           if(authMode !== 'login'){
-            // let data = {
-            //   userName: signUpdata.userName,
-            //   contactNumber: signUpdata.contactNumber,
-            //   authData
-            // } 
-
             console.log('from auth', signUpdata)
             dispatch(addUser(signUpdata))  
           }
-          nav.navigation.push('Drawer',{
+          else{
+            await dispatch(getLoggedUser(prasedRes.email))
+          }
+          await nav.navigation.push('Drawer',{
             email: prasedRes.email,
             name:prasedRes.displayName,
             Id:prasedRes.localId
@@ -219,7 +217,8 @@ export const authAutoSignIn = (nav) => {
         const name = await AsyncStorage.getItem('list1:auth:name');
         const Id = await AsyncStorage.getItem('list1:auth:Id');
         //console.log(email)
-        nav.navigation.push('Drawer',{
+        await dispatch(getLoggedUser(email))
+        await nav.navigation.push('Drawer',{
           email: email,
           name: name,
           Id: Id

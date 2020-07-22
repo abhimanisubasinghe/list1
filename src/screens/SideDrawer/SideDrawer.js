@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Image, Button, TouchableHighlight } from 'react-native';
 import { Container, Header, Content, Thumbnail, Left, Body, Title, Right, Footer} from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import {connect} from 'react-redux';
-import {authLogout} from '../../store/actions/index'
+import {authLogout, getLoggedUser} from '../../store/actions/index'
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {
     createDrawerNavigator,
@@ -57,7 +57,7 @@ function CustomDrawerContent({ progress, ...rest }) {
           <View style={{flexDirection:'row'}}>
           <Thumbnail large source={panda} />
             
-            <Text style={styles.profileText}>Hello {rest.children[1].name}</Text>
+            <Text style={styles.profileText}>Hello {rest.children[3]}</Text>
           </View>
         </TouchableOpacity>
         <Modal isVisible={isModalVisible}>
@@ -67,7 +67,7 @@ function CustomDrawerContent({ progress, ...rest }) {
                 
             <Left/>
             <Body>
-              <Title>{rest.children[1].name}</Title>
+              <Title>{rest.children[3]}</Title>
             </Body>
             <Right />
           </Header>
@@ -94,11 +94,18 @@ function CustomDrawerContent({ progress, ...rest }) {
 const Drawer = createDrawerNavigator();
 
 function MyDrawer(data) {
-  console.log('user',data.route.params)
+  console.log('user',data.route.params.email)
+  console.log(data)
+  // useEffect(() => {
+  //     data.onLogIn(data.route.params.email)
+  // })
+  
   return (
     <Drawer.Navigator initialRouteName="Feed" drawerContent={props => <CustomDrawerContent {...props} >
       {data.onLogOut}
-      {data.route.params}
+      {data.email}
+      {data.contactNumber}
+      {data.userName}
     </CustomDrawerContent>  
       } 
     drawerContentOptions={{
@@ -162,7 +169,7 @@ function MyDrawer(data) {
         }}
         
       >
-        {props => <Products {...props} user={data.route.params}/>}
+        {props => <Products {...props} />}
         </Drawer.Screen>
     </Drawer.Navigator>
   );
@@ -199,11 +206,20 @@ const styles = StyleSheet.create({
   }
 })
 
-
-const mapDispatchToProps = dispatch => {
-  return {
-      onLogOut: (nav) => dispatch(authLogout(nav))
+const mapStateToProps = state => {
+  return{
+      email: state.users.loggedUserEmail,
+      userName: state.users.loggedUserName,
+      contactNumber: state.users.loggedUserContactNumber,
+      
   }
 }
 
-export default connect(null, mapDispatchToProps) (MyDrawer);
+const mapDispatchToProps = dispatch => {
+  return {
+      onLogOut: (nav) => dispatch(authLogout(nav)),
+      onLogIn: (email) => dispatch(getLoggedUser(email))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (MyDrawer);

@@ -1,9 +1,12 @@
-import { DELETE_USER, SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER,SEARCH_USER,STOP_SEARCH_USER } from '../actions/actionType'
+import { DELETE_USER, SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER,SEARCH_USER,STOP_SEARCH_USER, LOGIN_USER, LOGOUT_USER } from '../actions/actionType'
 
 const initialState = {
     users: [],
     userAdded: false, 
-    searchUser: ''
+    searchUser: '',
+    loggedUserName: '',
+    loggedUserEmail: '',
+    loggedUserContactNumber: ''
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,6 +16,23 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 users: action.users
             }
+        case LOGIN_USER:{
+            console.log('action in login', action)
+            return{
+                ...state,
+                loggedUserName: action.userName,
+                loggedUserEmail: action.email,
+                loggedUserContactNumber: action.contactNumber
+            }
+        }
+        case LOGOUT_USER:{
+            return{
+                ...state,
+                loggedUserName: '',
+                loggedUserEmail: '',
+                loggedUserContactNumber: ''
+            }
+        }    
         case REMOVE_USER:
             return {
                 ...state,

@@ -19,7 +19,7 @@ class ViewShops extends Component  {
          console.log('loading')
          this.props.onLoadShops()
          this.props.onStopSearchShops()
-         
+        console.log('in shop', this.props)   
      }
 
      handleChange = (val) => {
@@ -144,7 +144,10 @@ class ViewShops extends Component  {
  const mapStateToProps = state => {
      return{
          shops: state.shops.shops,
-         searchShop: state.shops.searchShop
+         searchShop: state.shops.searchShop,
+         email: state.users.loggedUserEmail,
+        userName: state.users.loggedUserName,
+        contactNumber: state.users.loggedUserContactNumber,
      }
  }
  

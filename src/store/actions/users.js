@@ -1,4 +1,4 @@
-import { SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER, SEARCH_USER, STOP_SEARCH_USER} from './actionType'
+import { SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER, SEARCH_USER, STOP_SEARCH_USER, LOGIN_USER, LOGOUT_USER} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 export const startAddUser = () => {
@@ -55,6 +55,8 @@ export const addUser = (userData) => {
           console.log(parsedRes);
          // dispatch(uiStopLoading());
           dispatch(userAdded())
+          dispatch(getLoggedUser(userData.email))
+          dispatch(userLogIn(userData))
         })
         .catch(err => {
           console.log(err);
@@ -68,6 +70,61 @@ export const userAdded = () => {
   return{
     type: USER_ADDED
   }
+}
+
+export const userLogIn = (userData) => {
+  console.log('in user login', userData[0].name)
+  return{
+    type: LOGIN_USER,
+    userName: userData[0].name,
+    email: userData[0].email,
+    contactNumber: userData[0].contactNumber
+  }
+}
+
+export const userLogOut = () => {
+  return{
+    type: LOGOUT_USER
+  }
+}
+
+export const getLoggedUser = (email) => {
+  return (dispatch) =>{
+  dispatch(authGetToken())
+  .catch(() =>{
+      alert('No valid token found')
+  })
+  .then(token =>{
+      console.log(token)
+      return fetch('https://list1-9090.firebaseio.com/users.json?auth='+token)
+  })
+  .then(res =>  {
+    if(res.ok){
+      return res.json()
+    }
+    else{
+      throw (new Error())
+    }
+  })
+  .then(parsedRes => {
+      const users = [] 
+      for (let key in parsedRes){
+          users.push({
+              ...parsedRes[key],
+              key:key
+          })
+      }
+      user = users.filter(record => record.email.match(email))
+      console.log('loding data')
+      console.log('logged in user', user)
+      dispatch(userLogIn(user))
+      //dispatch(setUsers(users))
+  })
+  .catch(err => {
+      alert('Something went wrong, sorry :/')
+      console.log(err)
+  })
+}
 }
 
 export const getUsers = () => {
