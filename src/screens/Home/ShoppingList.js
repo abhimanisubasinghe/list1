@@ -1,12 +1,13 @@
 import React, {Component}  from 'react'
 import {View, Text, StyleSheet} from 'react-native'
-import { Container, Header, Left, Body, Right, Title, Subtitle , Button, } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Subtitle , Button, Tab, Tabs, ScrollableTab } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import ListForm from '../../components/ListForm/ListForm'
 
 class ShoppingList extends Component {
     render(){
         return(
-            <View>
+            <Container>
             <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
           <Left>
             <Button transparent>
@@ -22,8 +23,16 @@ class ShoppingList extends Component {
             </Button>
           </Right>
         </Header>
-                <Text> Your Lists </Text>
-            </View>    
+                {/* <ListForm/> */}
+                <Tabs style={styles.header} backgroundColor='#6a3982' renderTabBar={()=> <ScrollableTab style={styles.header} tabsContainerStyle={{shadowColor:'#6a3982', borderColor:'#6a3982', backgroundColor:'#6a3982'}}/>}>
+            <Tab heading="View" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
+                <ListForm />
+              </Tab>
+              <Tab heading="Add" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
+                <ListForm/>
+              </Tab>        
+            </Tabs>
+            </Container>    
         )
     }
 }

@@ -8,6 +8,7 @@ import productReducer from './reducers/products';
 import shopReducer from './reducers/shops';
 import userReducer from './reducers/users';
 import billReducer from './reducers/bills';
+import listReducer from './reducers/lists';
 
 const rootReducer = combineReducers({
     places: placesReducer,
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
     shops: shopReducer,
     users: userReducer,
     bills: billReducer,
+    lists: listReducer,
 });
 
 let composeEnhancers = compose;
