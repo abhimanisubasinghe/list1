@@ -19,6 +19,8 @@ import Home from '../Home/Home';
 import Products from '../Home/Products'
 import Shops from '../Home/Shops'
 import Groups from '../Home/Groups'
+import UtilityBills from '../Home/UtilityBills'
+import ShoppingList from '../Home/ShoppingList'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
   function MapIcon() {
@@ -143,6 +145,22 @@ function MyDrawer(data) {
         }}
         
 
+      />
+      <Drawer.Screen
+        name="ShoppingList"
+        component={ShoppingList}
+        options={{ 
+          drawerLabel: 'Shopping List',
+          drawerIcon: () => <Icon color='white' size={20} name='file' />
+       }}
+      />
+      <Drawer.Screen
+        name="UtilityBills"
+        component={UtilityBills}
+        options={{ 
+          drawerLabel: 'Utility Bills',
+          drawerIcon: () => <Icon color='white' size={20} name='money-bill-alt' />
+       }}
       />
       <Drawer.Screen
         name="Groups"

@@ -7,6 +7,7 @@ import authReducer from './reducers/auth';
 import productReducer from './reducers/products';
 import shopReducer from './reducers/shops';
 import userReducer from './reducers/users';
+import billReducer from './reducers/bills';
 
 const rootReducer = combineReducers({
     places: placesReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     products: productReducer,
     shops: shopReducer,
     users: userReducer,
+    bills: billReducer,
 });
 
 let composeEnhancers = compose;
