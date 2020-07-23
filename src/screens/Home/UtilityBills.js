@@ -1,11 +1,14 @@
 import React, {Component}  from 'react'
 import {View, Text, StyleSheet} from 'react-native'
-import { Container, Header, Left, Body, Right, Title, Subtitle , Button, } from 'native-base';
+import {Container, Header, Left, Body, Right, Title, Subtitle , Button, Tab, Tabs, ScrollableTab } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import UtilityBillsView from '../UtilityBillsView/UtilityBillsView';
 import UtilityForm from '../../components/UtiltyForm/UtilityForm';
 import {connect} from 'react-redux'
 import {getUserBills, searchBill, stopSearchBill} from '../../store/actions/index'
+import OverDueBills from '../Utility Bills/OverDueBills'
+import PaidBills from '../Utility Bills/PaidBills'
+import WarningBills from '../Utility Bills/WarningBills'
 
 class UtilityBills extends Component {
 
@@ -18,7 +21,7 @@ class UtilityBills extends Component {
 
     render(){
         return(
-            <View>
+            <Container>
             <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
           <Left>
             <Button transparent>
@@ -34,8 +37,23 @@ class UtilityBills extends Component {
             </Button>
           </Right>
         </Header>
+                {/* <UtilityBillsView/> */}
+                {/* <OverDueBills/> */}
+                <Tabs style={styles.header} backgroundColor='#6a3982' renderTabBar={()=> <ScrollableTab tabsContainerStyle={{shadowColor:'#6a3982', borderColor:'#6a3982', backgroundColor:'#6a3982'}}/>}>
+            <Tab heading="General" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
                 <UtilityBillsView/>
-            </View>    
+              </Tab>
+              <Tab heading="Paid" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
+                <PaidBills/>
+              </Tab>
+              <Tab heading="Warning" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
+                <WarningBills/>
+              </Tab>
+              <Tab heading="OverDue" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
+                <OverDueBills/>
+              </Tab>         
+            </Tabs>      
+            </Container>    
         )
     }
 }

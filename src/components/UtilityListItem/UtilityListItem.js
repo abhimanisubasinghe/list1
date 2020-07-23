@@ -161,7 +161,7 @@ class billListItem  extends React.Component {
         
         let buttonView = null
 
-        console.log(this.props.dueDate)
+        //console.log(this.props.dueDate)
         if(this.props.paid){
             buttonView = (
             <View style={styles.buttonView}> 
@@ -211,14 +211,20 @@ class billListItem  extends React.Component {
         let today = new Date()
         let tomorrow = new Date()
         tomorrow.setDate(new Date().getDate()+1)
-
+        //console.log(today , tomorrow, this.props.dueDate)
+        let temp = this.props.dueDate
+        //console.log(new Date(temp))
         let bill = null
+
+        const year = new Date(temp).getFullYear()
+        const month = new Date(temp).getMonth()
+        const date = new Date(temp).getDate()
 
         content = <View style={styles.textContainer}>
                             <Text style={styles.billName}>{this.props.billName}</Text>
                             <Text style={styles.billDescription}>{this.props.amount}
                             </Text>
-                            <Text style={styles.billDescription}>{this.props.dueDate.toString()}
+                            <Text style={styles.billDescription}>{year} / {month} / {date}
                             </Text>
                         </View>            
 
@@ -228,7 +234,7 @@ class billListItem  extends React.Component {
             console.log('paid')
             bill = (
                 <TouchableHighlight>
-                    <View styles={styles.paidContainer}>
+                    <View style={styles.paidContainer}>
                         <View style={styles.listItem}>
                             {content}
                             {paidChecker}
@@ -240,12 +246,12 @@ class billListItem  extends React.Component {
             )
         }
         else{
-            if(this.props.dueDate < today){
+            if(new Date(temp) < today){
                 //overdue bill
                 console.log('overdue')
                 bill = (
                     <TouchableHighlight>
-                        <View styles={styles.overDueContainer}>
+                        <View style={styles.overDueContainer}>
                             <View style={styles.listItem}>
                                 {content}
                                 {paidChecker}
@@ -257,12 +263,12 @@ class billListItem  extends React.Component {
                 )
             }
             else{
-                if(this.state.dueDate <= tomorrow){
+                if(new Date(temp) <= tomorrow){
                     //warning bill
                     console.log('warnign')
                     bill = (
                         <TouchableHighlight>
-                            <View styles={styles.warningContainer}>
+                            <View style={styles.warningContainer}>
                                 <View style={styles.listItem}>
                                     {content}
                                     {paidChecker}
@@ -278,7 +284,7 @@ class billListItem  extends React.Component {
                     console.log('normal')
                     bill = (
                         <TouchableHighlight>
-                            <View styles={styles.container}>
+                            <View style={styles.container}>
                                 <View style={styles.listItem}>
                                     {content}
                                     {paidChecker}
@@ -326,28 +332,6 @@ class billListItem  extends React.Component {
                         </Card>
                     </TouchableHighlight>
                 </Modal>
-        
-                
-            {/* <TouchableHighlight onPress={() => this.modalView()}>
-                 */}
-            {/* <TouchableHighlight>
-                <View style={
-                    this.props.paid? 
-                    styles.paidContainer:
-                    (this.props.date <= today)?
-                    styles.overDueContainer:
-                    (this.props.date <= tomorrow)?
-                    styles.warningContainer:
-                    styles.container
-                    
-                    }>
-                    <View style={styles.listItem}>
-                        {content}     
-                        {paidChecker}
-                    </View>  
-                        {buttonView}
-                </View> 
-            </TouchableHighlight> */}
             {bill}
             {updateItem}
             </KeyboardAvoidingView>
@@ -368,7 +352,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
     },
     warningContainer: {
-        backgroundColor: "#ccc",  
+        backgroundColor: "rgba(237, 206, 133,0.5)",  
         width: '95%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -379,7 +363,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     overDueContainer: {
-        backgroundColor: "#ccc",  
+        backgroundColor: "rgba(237, 138, 133,0.5)",  
         width: '95%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -390,7 +374,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     paidContainer:{
-        backgroundColor: "#ccc",  
+        backgroundColor: "rgba(133, 237, 156,0.5)",  
         width: '95%',
         alignItems: 'center',
         justifyContent: 'center',
@@ -404,7 +388,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginBottom: 5,
         padding: 10,
-        backgroundColor: "#ccc",
+        backgroundColor: "rgba(0,0,0,0)",
         flexDirection: 'row',
         alignItems: 'center'
     },
