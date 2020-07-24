@@ -5,7 +5,7 @@ import defaultImage from '../../assets/default.jpg'
 import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-import {deleteProduct, updateProduct } from '../../store/actions/index'
+import {deleteProduct, updateProduct, selectProducts } from '../../store/actions/index'
 
 import ProductUpdate from '../ProductUpdate/ProductUpdate'
 import DefaultInput from '../UI/DefaultInput/DefaultInput'
@@ -14,9 +14,24 @@ import validate from '../../utils/validation'
 
 class productListItemModal  extends React.Component {
 
+    state = {
+        productSelected : false
+    }
+
+    selectProductHandler = () => {
+        let product = {
+            ...this.props.product,
+            quantity: 1
+        }
+        this.props.onSelectProduct(product)
+        this.setState({
+            productSelected: true
+        })
+    }
+
 
     componentDidMount(){
-        console.log(this.props.productSharedUsers)
+        //console.log(this.props.productSharedUsers)
     }
 
     render(){
@@ -31,6 +46,21 @@ class productListItemModal  extends React.Component {
             content = <ActivityIndicator color='black'/>
         }
 
+        let selectProduct = null
+
+        if(!this.state.productSelected){
+            selectProduct = <TouchableOpacity onPress={() => this.selectProductHandler()}>
+                            <View style={styles.button}>
+                            <Icon 
+                                size= {30}
+                                name="plus-circle"
+                                color="#346da3"
+                                textAlign= "center"
+                            />
+                            </View>
+                        </TouchableOpacity> 
+        }
+
         return(
             <View>
             <TouchableHighlight>
@@ -43,19 +73,11 @@ class productListItemModal  extends React.Component {
                             resizeMode = "cover"
                         />
                         {content}
-                    </View>  
-                    <View style={styles.buttonView}>
-                        <TouchableOpacity>
-                            <View style={styles.button}>
-                            <Icon 
-                                size= {30}
-                                name="trash"
-                                color="#b33434"
-                                textAlign= "center"
-                            />
-                            </View>
-                        </TouchableOpacity>  
+                        
                     </View>
+                    <View style={styles.buttonView}>
+                         {selectProduct}
+                        </View>  
                 </View> 
             </TouchableHighlight>
             </View>
@@ -117,13 +139,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         isLoading: state.ui.isLoading,
+        searchProduct: state.products.searchProduct,
+        selectedProducts: state.products.selectedProducts,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
         onDeleteProduct: (key) => dispatch(deleteProduct(key)),
-        onUpdateProduct: (key, productName, productDescription,owner, sharedUsers) => dispatch(updateProduct(key, productName, productDescription, owner, sharedUsers))
+        onUpdateProduct: (key, productName, productDescription,owner, sharedUsers) => dispatch(updateProduct(key, productName, productDescription, owner, sharedUsers)),
+        onSelectProduct: (product) => dispatch(selectProducts(product))
     }
 }
 

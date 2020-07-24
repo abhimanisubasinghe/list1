@@ -82,12 +82,22 @@ class ViewShopsModal extends Component  {
 
         let only = []
 
+        let len = selectedShops.length
+
         shops = shops.filter((item) =>  {
+            let count = 0
             return selectedShops.filter((data)=> {
                 console.log(data.key, item.key)
                 let flag = (data.key != item.key)
                 console.log(flag)
                 if(flag){
+                    if(data.location != null){
+                        
+                        count ++
+                    }
+                    
+                }
+                if(count == len){
                     let temp = only.concat(item)
                     only = temp
                 }

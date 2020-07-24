@@ -11,8 +11,10 @@ const productListModal = (props) => {
         <FlatList 
         style={styles.listContainer}
         data= {props.products}
+
         renderItem={(info) => (
             <ProductListItemModal 
+                product = {info.item}
                 productName={info.item.name} 
                 productImage= {info.item.image}
                 productDescription = {info.item.description}
@@ -20,6 +22,7 @@ const productListModal = (props) => {
                 productOwner = {info.item.owner}
                 productSharedUsers = {info.item.sharedUsers}
                 onItemPressed = {() => props.onItemSelected(info.item.key)}
+
             />
         )}
         /> 

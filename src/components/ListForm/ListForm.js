@@ -1,6 +1,6 @@
 import React, {Component}  from 'react'
-import {View, Text, StyleSheet, Platform, TouchableHighlight, ScrollView, TouchableOpacity, FlatList} from 'react-native'
-import {  Container, Header, Content, Card, CardItem, Body, Left, Title, Subtitle, Button} from 'native-base';
+import {View, Text, StyleSheet, Platform, TouchableHighlight, ScrollView, TouchableOpacity, FlatList, Dimensions} from 'react-native'
+import {  Container, Header, Content, Card, CardItem, Body, Left, Title, Subtitle, Button, Accordion, Separator, List, ListItem} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DefaultInput from '../UI/DefaultInput/DefaultInput';
 import DefaultButton from '../UI/DefaultButton/DefaultButton';
@@ -9,13 +9,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 
 import {connect} from 'react-redux';
+import uuid  from 'react-native-uuid';
 
 import ViewShops from '../../screens/ViewShops/ViewShopsModal'
 import ViewProduct from '../../screens/ViewProduct/ViewProductModal'
 
 import ShopItem from './ShopItem'
+import ProductItem from './ProductItem'
 
-import {addList, startAddList, getUserLists, getShops, getUserProducts, clearSelectedShops} from '../../store/actions/index'
+import {addList, startAddList, getUserLists, getShops, getUserProducts, clearSelectedShops, clearSelectedProducts} from '../../store/actions/index'
 
 class ListForm extends Component {
 
@@ -24,10 +26,27 @@ class ListForm extends Component {
         mode: 'date',
         show: false,
         listName: '',
-        products: [{product:{productName: '', imageURL: ''}, quantity:0}],
+        products: [],
         shops: [],
         shopModalState: false,
         productModalState: false,
+        tempShop : '',
+        tempProduct: '',
+        productView: false,
+        shopView: false
+    }
+
+    shopViewHandler = () =>{
+        this.setState(prevState => {
+            return {shopView: prevState.shopView ? false: true} 
+        })
+    }
+
+    productViewHandler = () =>{
+        this.setState(prevState => {
+            return {productView: prevState.productView ? false: true} 
+        })
+        console.log(this.state.productView)
     }
 
     shopModalView = async() => {
@@ -55,12 +74,31 @@ class ListForm extends Component {
         }
     }
 
-    productModalView = () => {
-        this.setState(prevState => {
+    productModalView = async() => {
+        //let product = this.state.selectedProducts
+        
+        let temp = await this.state.products.concat(this.props.selectedProducts)
+        await this.setState(prevState => {
+            
             return{
-                productModalState: prevState.productModalState ? false : true
+                productModalState: prevState.productModalState ? false : true,
+                products: temp
             }
         })
+        //this.props.onClearSelectedShops()
+        await console.log('selected',this.state.products)
+        await this.props.onClearSelectedProducts()
+        await console.log('selected', this.state.products, 'state', this.props.selectedProducts)
+    }
+
+    deleteProduct = (product) => {
+        console.log('in delete',product)
+        var array = [...this.state.products]; // make a separate copy of the array
+        var index = array.indexOf(product)
+        if (index !== -1) {
+            array.splice(index, 1);
+            this.setState({products: array});
+        }
     }
     
     onChange = (event, selectedDate) => {
@@ -80,6 +118,71 @@ class ListForm extends Component {
             }
         })
     } 
+
+    onChangeShopName = (val) => {
+        this.setState(prevState => {
+            return{
+                tempShop: val
+            }
+        })
+    }
+
+    shopManualAddedHandler = async() => {
+        if(this.state.tempShop){
+            let shop = {
+                name: this.state.tempShop,
+                key: uuid.v4(),
+                description: 'manually added'
+            }
+            let temp = await this.state.shops.concat(shop)
+            await this.setState(prevState => {
+                
+                return{
+                    tempShop: '',
+                    shops: temp
+                }
+            })
+            //this.props.onClearSelectedShops()
+            await console.log('selected',this.state.shops)
+            //await this.props.onClearSelectedShops()
+            //await console.log('selected', this.state.shops, 'state', this.props.selectedShops)
+        }
+        else{
+            alert('Enter a valid name')
+        }
+    }
+
+    onChangeProductName = (val) => {
+        this.setState(prevState => {
+            return{
+                tempProduct: val
+            }
+        })
+    }
+
+    productManualAddedHandler = async() => {
+        if(this.state.tempProduct){
+            let product = {
+                name: this.state.tempProduct,
+                key: uuid.v4(),
+                description: 'manually added',
+                quantity: 1
+            }
+            let temp = await this.state.products.concat(product)
+            await this.setState(prevState => {
+                
+                return{
+                    tempProduct: '',
+                    products: temp
+                }
+            })
+            await console.log('selected',this.state.products)
+        }
+        else{
+            alert('Enter a valid product name')
+        }
+    }
+    
     
     showMode = currentMode => {
         this.setState(prevState => {
@@ -107,16 +210,19 @@ class ListForm extends Component {
             mode: 'date',
             show: false,
             listName: '',
-            products: [{product:{productName: '', imageURL: ''}, quantity:0}],
+            products: [],
             shops: [],
             shopModalState: false,
             productModalState: false,
+            tempShop : '',
+            tempProduct: ''
         })
     }
 
     componentDidMount(){
         this.props.onLoadShops()
         this.props.onClearSelectedShops()
+        this.props.onClearSelectedProducts()
         this.reset()
     }
 
@@ -213,25 +319,41 @@ class ListForm extends Component {
                                 </DefaultButton>
                             </Modal>
 
-        let selectedShopsView = null
+        let selectedShopsView = <Text style={styles.empty}>Add shops you are going to visit </Text>
         
         if(this.state.shops.length>0){
-            selectedShopsView = <FlatList 
-            style={styles.listContainer}
-            data= {this.state.shops}
-            renderItem={(info) => (
-                <ShopItem 
-                    shop = {info.item}
-                    shopName={info.item.name} 
-                    shopLocation= {info.item.location}
-                    shopDescription = {info.item.description}
-                    shopKey = {info.item.key}
-                    onItemPressed = {() => props.onItemSelected(info.item.key)}
-                    onDelete = {() => this.deleteShop(info.item)}
+            selectedShopsView = this.state.shops.map((info) => {
+                return <ShopItem 
+                    shop = {info}
+                    shopName={info.name} 
+                    shopLocation= {info.location}
+                    shopDescription = {info.description}
+                    shopKey = {info.key}
+                    key = {info.key}
+                    onItemPressed = {() => props.onItemSelected(info.key)}
+                    onDelete = {() => this.deleteShop(info)}
                 />
-            )}
-            /> 
+            })
         }
+
+        let selectedProductView = <Text style={styles.empty}>Add products to your list </Text>
+
+        if(this.state.products.length>0){
+            selectedProductView = this.state.products.map((info) => {
+                return <ProductItem 
+                    product = {info}
+                    productName={info.name} 
+                    //shopLocation= {info.item.location}
+                    productDescription = {info.description}
+                    productKey = {info.key}
+                    key = {info.key}
+                    //onItemPressed = {() => props.onItemSelected(info.item.key)}
+                    onDelete = {() => this.deleteProduct(info)}
+                    quantity = {info.quantity}
+                />
+            })
+        }
+
 
         return(
             <View>
@@ -251,8 +373,25 @@ class ListForm extends Component {
                 >
                     <Text>select due date: {year}/{month}/{date} {dayName} </Text>
                 </DefaultButton> 
-                <View>
-                {selectedShopsView}
+                <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems:'center'}}>
+                <DefaultInput
+                    placeholder = 'Add a shop manually'
+                    style = {styles.manualInputStyle}
+                    value = {this.state.tempShop}
+                    onChangeText = {this.onChangeShopName}
+                />
+                <TouchableOpacity onPress={() => this.shopManualAddedHandler()}>
+                    <View style={styles.incrementButton}>
+                    <Icon 
+                        size= {28}
+                        name="plus-circle" 
+                        color="#346da3"
+                        textAlign= "center"
+                    />
+                    
+                    </View>
+                    
+                </TouchableOpacity>
                 </View>
                 <DefaultButton 
                 color='black'
@@ -260,6 +399,26 @@ class ListForm extends Component {
                 >
                     select a shop
                 </DefaultButton>
+                <View style={{flexDirection: 'row', justifyContent:'space-between', alignItems:'center'}}>
+                <DefaultInput
+                    placeholder = 'Add a product manually'
+                    style = {styles.manualInputStyle}
+                    value = {this.state.tempProduct}
+                    onChangeText = {this.onChangeProductName}
+                />
+                <TouchableOpacity onPress={() => this.productManualAddedHandler()}>
+                    <View style={styles.incrementButton}>
+                    <Icon 
+                        size= {28}
+                        name="plus-circle" 
+                        color="#346da3"
+                        textAlign= "center"
+                    />
+                    
+                    </View>
+                    
+                </TouchableOpacity>
+                </View>
                 <DefaultButton 
                 color='black'
                 onPress={this.productModalView}
@@ -271,7 +430,26 @@ class ListForm extends Component {
                 onPress={this.submitHandler}
                 >
                     Add
-                </DefaultButton>       
+                </DefaultButton>  
+                <Separator bordered style={styles.separator}>
+                    <TouchableOpacity onPress={this.shopViewHandler} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Text style={styles.separatorHeader}>SHOPS</Text>
+                    <Text style={styles.separatorHeaderSub}>No of shops you are visiting: {this.state.shops.length}</Text>
+                    </TouchableOpacity>
+                </Separator>
+                <View style={{width: '100%'}}>
+                    {this.state.shopView ? selectedShopsView: null}
+                </View>
+                <Separator bordered style={styles.separator}>
+                    <TouchableOpacity onPress={this.productViewHandler} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Text style={styles.separatorHeader}>PRODUCTS</Text>
+                    <Text style={styles.separatorHeaderSub}>No of products you added: {this.state.products.length}</Text>
+                    </TouchableOpacity>
+                </Separator>
+                <View style={{width: '100%'}}>
+                    {this.state.productView ? selectedProductView: null}
+                </View>
+
                 {this.state.show && (
                     <DateTimePicker
                     testID="dateTimePicker"
@@ -282,65 +460,6 @@ class ListForm extends Component {
                     onChange={this.onChange}
                     />
                 )}
-                <TouchableOpacity style={styles.shopContainer}>
-                    <View >
-                        <Text style={styles.shopContainerText}>Shop1</Text>
-                    </View>    
-                    <TouchableOpacity onPress={() => alert('delete')}>
-                        <View style={styles.button}>
-                        <Icon 
-                            size= {28}
-                            name="times-circle"
-                            color="red"
-                            textAlign= "center"
-                        />
-                        </View>
-                    </TouchableOpacity>
-                </TouchableOpacity> 
-                
-                <TouchableOpacity style={styles.shopContainer}>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={styles.shopContainerText}>Product</Text>
-                        <Text style={styles.quantityText}>12</Text>
-                    </View>   
-                    <View style={{flexDirection: 'row'}}> 
-                    <TouchableOpacity onPress={() => alert('added one more')}>
-                        <View style={styles.incrementButton}>
-                        <Icon 
-                            size= {28}
-                            name="plus-circle"
-                            color="#346da3"
-                            textAlign= "center"
-                        />
-                        
-                        </View>
-                        
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => alert('reduced one')}>
-                        <View style={styles.incrementButton}>
-                        <Icon 
-                            size= {28}
-                            name="minus-circle"
-                            color="#c98c47"
-                            textAlign= "center"
-                        />
-                        
-                        </View>
-                        
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity onPress={() => alert('delete')}>
-                        <View style={styles.button}>
-                        <Icon 
-                            size= {28}
-                            name="times-circle"
-                            color="red"
-                            textAlign= "center"
-                        />
-                        </View>
-                    </TouchableOpacity>
-                    </View>
-                </TouchableOpacity>   
             </ScrollView>    
             </View>
         )
@@ -368,6 +487,10 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         width: '95%'
     },
+    manualInputStyle: {
+        borderColor: 'black',
+        width: '80%'
+    },
     modal: {
         backgroundColor: 'rgba(255,255,255,0.8)',
         flex: 1,
@@ -394,8 +517,8 @@ const styles = StyleSheet.create({
     },
     incrementButton: {
         padding: 2,
-        paddingLeft: 20,
-        paddingRight: 10,
+        paddingLeft: 10,
+        paddingRight: 20,
         flexDirection: 'row'
     },
     shopContainerText: {
@@ -409,6 +532,25 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 5,
         alignItems: 'center'
+    },
+    empty:{
+        fontStyle: 'italic',
+        paddingLeft: 25,
+        color: '#aaa'
+    },
+    separatorHeader:{
+        fontWeight: 'bold',
+    },
+    separatorHeaderSub:{
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        paddingRight: 20
+    },
+    separator: {
+        padding: 5,
+        margin: 5,
+        backgroundColor: '#b997e8',
+        borderRadius: 15
     }
 })
 
@@ -423,6 +565,7 @@ const mapStateToProps = state => {
         shops: state.shops.shops,
         products: state.products.products,
         selectedShops: state.shops.selectedShops,
+        selectedProducts: state.products.selectedProducts
     }
 }
 
@@ -433,7 +576,8 @@ const mapDispatchToProps = dispatch => {
         onLoadUserLists: (email) => dispatch(getUserLists(email)),
         onLoadUserProducts: (email) => dispatch(getUserProducts(email)),
         onLoadShops: () => dispatch(getShops()),
-        onClearSelectedShops: () => dispatch(clearSelectedShops())
+        onClearSelectedShops: () => dispatch(clearSelectedShops()),
+        onClearSelectedProducts: () => dispatch(clearSelectedProducts())
     }
 }
 
