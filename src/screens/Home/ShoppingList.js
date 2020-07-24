@@ -2,7 +2,8 @@ import React, {Component}  from 'react'
 import {View, Text, StyleSheet} from 'react-native'
 import { Container, Header, Left, Body, Right, Title, Subtitle , Button, Tab, Tabs, ScrollableTab } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import ListForm from '../../components/ListForm/ListForm'
+import ListForm from '../../components/ListForm/ListForm';
+import ViewLists from '../ViewLists/ViewLists'
 
 class ShoppingList extends Component {
     render(){
@@ -26,7 +27,7 @@ class ShoppingList extends Component {
                 {/* <ListForm/> */}
                 <Tabs backgroundColor='#6a3982' renderTabBar={()=> <ScrollableTab tabsContainerStyle={{shadowColor:'#6a3982', borderColor:'#6a3982', backgroundColor:'#6a3982'}}/>}>
             <Tab heading="View" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
-                <ListForm />
+                <ViewLists />
               </Tab>
               <Tab heading="Add" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
                 <ListForm/>

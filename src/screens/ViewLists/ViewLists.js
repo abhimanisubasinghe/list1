@@ -2,49 +2,49 @@ import React, {Component}  from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, } from 'react-native'
 import {connect} from 'react-redux'
 
-import {getShops, searchShop, stopSearchShop} from '../../store/actions/index'
-import ShopList from '../../components/ShopListModal/ShopListModal'
+import {getUserLists, searchList, stopSearchList} from '../../store/actions/index'
+import ListList from '../../components/ListList/ListList'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 
-class ViewShopsModal extends Component  {
+class ViewLists extends Component  {
 
     state ={
-        shopsLoaded: false ,
+        listsLoaded: false ,
         removeAnimation: new Animated.Value(1),
-        shopsAnim: new Animated.Value(0),
+        listsAnim: new Animated.Value(0),
         search: ''
      }
  
      componentDidMount(){
          console.log('loading')
-         this.props.onLoadShops()
-         this.props.onStopSearchShops()
-        console.log('in shop', this.props)   
+         this.props.onLoadLists(this.props.email)
+         this.props.onStopSearchLists()
+        console.log('in list', this.props)   
      }
 
      handleChange = (val) => {
-        this.props.onSearchShops(val);
+        this.props.onSearchLists(val);
       } 
 
  
-     shopsLoadedHandler = () => {
-         Animated.timing(this.state.shopsAnim, {
+     listsLoadedHandler = () => {
+         Animated.timing(this.state.listsAnim, {
              toValue: 1,
              duration: 500,
              useNativeDriver: true
          }).start();
      }
  
-     shopsSearchHandler = () => {
+     listsSearchHandler = () => {
          Animated.timing(this.state.removeAnimation, {
              toValue: 0,
              duration: 500,
              useNativeDriver: true
          }).start(() => {
              this.setState({
-                 shopsLoaded: true
+                 listsLoaded: true
              })
-             this.shopsLoadedHandler();
+             this.listsLoadedHandler();
          });
  
      }
@@ -66,79 +66,43 @@ class ViewShopsModal extends Component  {
                  ]
              }}
              >
-             <TouchableOpacity onPress={this.shopsSearchHandler}>
+             <TouchableOpacity onPress={this.listsSearchHandler}>
                  <View style={styles.searchButton}>
-                     <Text style={styles.searchButtonText}>My Shops</Text>
+                     <Text style={styles.searchButtonText}>My Lists</Text>
                  </View>
              </TouchableOpacity>
              </Animated.View>
          )
  
-        let shops = this.props.shops
+         let lists = this.props.lists
         //console.log('testing', this.state.search)
-        let selectedShops = this.props.selectedShops
 
-        console.log('selected shops', selectedShops)
-
-        let only = []
-
-        let len = selectedShops.length
-
-        shops = shops.filter((item) =>  {
-            let count = 0
-            return selectedShops.filter((data)=> {
-                console.log(data.key, item.key)
-                let flag = (data.key != item.key)
-                console.log(flag)
-                if(flag){
-                    if(data.location != null){
-                        
-                        count ++
-                    }
-                    
-                }
-                if(count == len){
-                    let temp = only.concat(item)
-                    only = temp
-                }
-                return data.key  == item.key
-            })
-          })
-
-        console.log('only', only)
-
-        if(selectedShops.length != 0){
-            shops = only
+        let list = this.props.searchList.trim().toLowerCase();
+        //console.log('search list',list)
+        if (list.length > 0) {
+        lists = lists.filter(item => item.name.toLowerCase().match(list));
         }
 
-        
+        //console.log('loading lists', lists)
 
-        let shop = this.props.searchShop.trim();
-        //console.log('search shop',shop)
-        if (shop.length > 0) {
-        shops = shops.filter(item => item.name.toLowerCase().match(shop));
-        }
-
-        console.log('loading shops', shops)
-
-         if(this.state.shopsLoaded){
+         if(this.state.listsLoaded){
              content = (
                  <Animated.View style={{
-                     opacity: this.state.shopsAnim
+                     opacity: this.state.listsAnim
                  }}>
                      <View style={{alignItems: 'center'}}>
                     <DefaultInput
                         placeholder = 'search'
                         style = {{
                             borderColor: 'black',
-                            width: '90%'
+                            width: Dimensions.get("window").width* 0.9
                         }}
-                        value={this.props.searchShop}
+                        value={this.props.searchList}
                         onChangeText={this.handleChange}
                     />
                     </View>
-                     <ShopList
-                     shops={shops}
+                     <ListList
+                     lists={lists}
                      onItemSelected={this.itemSelectedHandler}
                      />
                  </Animated.View>
@@ -147,7 +111,7 @@ class ViewShopsModal extends Component  {
          
          return ( 
              <View 
-             style= {this.state.shopsLoaded ? null : styles.buttonContaier}
+             style= {this.state.listsLoaded ? null : styles.buttonContaier}
              >
                  {content}
              </View>
@@ -179,8 +143,8 @@ class ViewShopsModal extends Component  {
  
  const mapStateToProps = state => {
      return{
-         shops: state.shops.shops,
-         searchShop: state.shops.searchShop,
+         lists: state.lists.lists,
+         searchList: state.lists.searchList,
          email: state.users.loggedUserEmail,
         userName: state.users.loggedUserName,
         contactNumber: state.users.loggedUserContactNumber,
@@ -189,12 +153,12 @@ class ViewShopsModal extends Component  {
  
  const mapDispatchToProps = dispatch => {
      return {
-         onLoadShops: () => dispatch(getShops()),
-         onSearchShops: (val) => dispatch(searchShop(val)),
-         onStopSearchShops: () => dispatch(stopSearchShop())
+         onLoadLists: (email) => dispatch(getUserLists(email)),
+         onSearchLists: (val) => dispatch(searchList(val)),
+         onStopSearchLists: () => dispatch(stopSearchList())
      }
  }
  
- export default connect(mapStateToProps, mapDispatchToProps)(ViewShopsModal);
+ export default connect(mapStateToProps, mapDispatchToProps)(ViewLists);
 
-//export default ViewShops;
+//export default ViewLists;

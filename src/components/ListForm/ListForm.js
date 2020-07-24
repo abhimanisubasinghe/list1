@@ -1,6 +1,6 @@
 import React, {Component}  from 'react'
 import {View, Text, StyleSheet, Platform, TouchableHighlight, ScrollView, TouchableOpacity, FlatList, Dimensions} from 'react-native'
-import {  Container, Header, Content, Card, CardItem, Body, Left, Title, Subtitle, Button, Accordion, Separator, List, ListItem} from 'native-base';
+import {  Container, Header, Content, Card, CardItem, Body, Left, Title, Subtitle, Button, Accordion, Separator, List, ListItem, Right} from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DefaultInput from '../UI/DefaultInput/DefaultInput';
 import DefaultButton from '../UI/DefaultButton/DefaultButton';
@@ -98,6 +98,35 @@ class ListForm extends Component {
         if (index !== -1) {
             array.splice(index, 1);
             this.setState({products: array});
+        }
+    }
+
+    incrementProduct = (product) => {
+        console.log('in increment',product)
+        var array = [...this.state.products]; 
+        var index = array.indexOf(product)
+        if (index !== -1) {
+            console.log(array[index].quantity);
+            array[index].quantity += 1 
+            this.setState({products: array});
+        }
+    }
+
+    reduceProduct = (product) => {
+        console.log('in reduce',product)
+        var array = [...this.state.products]; 
+        var index = array.indexOf(product)
+        if (index !== -1) {
+            console.log(array[index].quantity);
+            if(array[index].quantity == 1){
+                alert('product is removed')
+                this.deleteProduct(product)
+            }
+            else{
+                array[index].quantity -= 1 
+                this.setState({products: array});
+            }
+            
         }
     }
     
@@ -215,7 +244,9 @@ class ListForm extends Component {
             shopModalState: false,
             productModalState: false,
             tempShop : '',
-            tempProduct: ''
+            tempProduct: '',
+            productView: false,
+            shopView: false
         })
     }
 
@@ -227,8 +258,9 @@ class ListForm extends Component {
     }
 
     submitHandler = () => {
-        if(this.state.listName && this.state.products && (this.state.date >= new Date())){
-            this.props.onAddList(this.state.listName, this.state.amount, this.state.date, this.props.email)
+        //listName, products,shops, dueDate, userEmail
+        if(this.state.listName && this.state.products && (this.state.date >= new Date()) && this.state.products.length > 0){
+            this.props.onAddList(this.state.listName, this.state.products,this.state.shops, this.state.date, this.props.email)
             this.reset()
             console.log(this.props.lists)
             console.log('pass')
@@ -277,7 +309,7 @@ class ListForm extends Component {
 
         let shops = this.props.shops
 
-        shopModal = <Modal isVisible={this.state.shopModalState} style={styles.modal}>
+        shopModal = <Modal isVisible={this.state.shopModalState} style={styles.modal} keyboardShouldPersistTaps='always'>
                         <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
                         <Left>
                             <Button transparent>
@@ -285,10 +317,20 @@ class ListForm extends Component {
                             </Button>
                         </Left>
                         <Body>
-                            <Title>Search your shop </Title>
+                            <Title>SHOPS </Title>
                         </Body>
+                        <Right>
+                        <TouchableOpacity>    
+                        <Button transparent vertical onPress={this.shopModalView}>
+                            <Icon name="check-circle" size={30} color="white" />
+                            <Text style={{color: 'white', fontWeight: 'bold', fontSize:15}}>Done</Text>
+                            </Button>
+                        </TouchableOpacity>    
+                        </Right>    
                         </Header>
+                        
                         <ViewShops selectedShops={this.state.shops}/>
+                        
                         <DefaultButton  
                         color='green' 
                         onPress={this.shopModalView}
@@ -309,8 +351,17 @@ class ListForm extends Component {
                                 <Body>
                                     <Title>Search your product </Title>
                                 </Body>
+                                <Right>
+                                <TouchableOpacity>    
+                                <Button transparent vertical onPress={this.productModalView}>
+                                    <Icon name="check-circle" size={30} color="white" />
+                                    <Text style={{color: 'white', fontWeight: 'bold', fontSize:15}}>Done</Text>
+                                    </Button>
+                                </TouchableOpacity>    
+                                </Right>    
                                 </Header>
-                                <ViewProduct/>
+                                <ViewProduct selectedProducts={this.state.products}/>
+                                
                                 <DefaultButton  
                                 color='green' 
                                 onPress={this.productModalView}
@@ -349,6 +400,8 @@ class ListForm extends Component {
                     key = {info.key}
                     //onItemPressed = {() => props.onItemSelected(info.item.key)}
                     onDelete = {() => this.deleteProduct(info)}
+                    onAdd = {() => this.incrementProduct(info)}
+                    onReduce = {() => this.reduceProduct(info)}
                     quantity = {info.quantity}
                 />
             })
@@ -493,8 +546,8 @@ const styles = StyleSheet.create({
     },
     modal: {
         backgroundColor: 'rgba(255,255,255,0.8)',
-        flex: 1,
-        height: '100%',
+        //flex: 1,
+        height: 500,
         padding: 10,
         justifyContent: 'space-between'
       },

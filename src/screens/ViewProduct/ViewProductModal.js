@@ -91,6 +91,43 @@ class ViewProductModal extends Component  {
 
         let products = this.props.products
         //console.log('testing', this.state.search)
+        let selectedProducts = this.props.selectedProducts
+
+        console.log('selected products', selectedProducts)
+
+        let only = []
+
+        let len = selectedProducts.length
+
+        products = products.filter((item) =>  {
+            let count = 0
+            return selectedProducts.filter((data)=> {
+                console.log(data.key, item.key)
+                let flag = (data.key != item.key)
+                console.log(flag)
+                if(flag){
+                    if(data.owner != null){     
+                        count ++
+                    }
+                    
+                }
+                else{
+                    count = 0
+                }
+                if(count == len){
+                    let temp = only.concat(item)
+                    only = temp
+                }
+                return data.key  == item.key
+            })
+          })
+
+        console.log('only', only)
+
+        if(selectedProducts.length != 0){
+            console.log('only')
+            products = only
+        }
 
         let product = this.props.searchProduct.trim().toLowerCase();
         //console.log('search shop',shop)

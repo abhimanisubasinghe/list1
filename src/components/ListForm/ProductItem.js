@@ -14,7 +14,7 @@ class shopItem extends Component{
                         <Text style={styles.quantityText}>{this.props.quantity}</Text>
                     </View>   
                     <View style={{flexDirection: 'row'}}> 
-                    <TouchableOpacity onPress={() => alert('added one more')}>
+                    <TouchableOpacity onPress={this.props.onAdd}>
                         <View style={styles.incrementButton}>
                         <Icon 
                             size= {28}
@@ -26,7 +26,7 @@ class shopItem extends Component{
                         </View>
                         
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => alert('reduced one')}>
+                    <TouchableOpacity onPress={this.props.onReduce}>
                         <View style={styles.incrementButton}>
                         <Icon 
                             size= {28}
