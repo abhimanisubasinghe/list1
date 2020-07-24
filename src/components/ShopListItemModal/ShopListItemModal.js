@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import MapView from 'react-native-maps'
 
-import {deleteShop, updateShop } from '../../store/actions/index'
+import {deleteShop, updateShop,selectShops } from '../../store/actions/index'
 
 //import ShopUpdate from '../ShopUpdate/ShopUpdate'
 import DefaultInput from '../UI/DefaultInput/DefaultInput'
@@ -18,6 +18,7 @@ import PickLocation from '../PickLocation/PickLocation'
 class shopListItemModal  extends React.Component {
 
     state = {
+        shopSelected: false,
         modalLocation : false,
         focusedLocation:{
             latitude: this.props.shopLocation.latitude ,
@@ -68,13 +69,20 @@ class shopListItemModal  extends React.Component {
 
     }
 
+    selectShopHandler = () => {
+        this.props.onSelectShop(this.props.shop)
+        this.setState({
+            shopSelected: true
+        })
+    }
+
     componentDidMount(){
         //this.reset()
     }
 
     render(){
       // console.log(this.state.focusedLocation)
-
+        //console.log(this.props)
        let marker = null;
 
         if (this.state.focusedLocation){
@@ -126,6 +134,21 @@ class shopListItemModal  extends React.Component {
             content = <ActivityIndicator color='black'/>
         }
 
+        let selectShop = null
+
+        if(!this.state.shopSelected){
+            selectShop = <TouchableOpacity onPress={() => this.selectShopHandler()}>
+                            <View style={styles.button}>
+                            <Icon 
+                                size= {30}
+                                name="plus-circle"
+                                color="#346da3"
+                                textAlign= "center"
+                            />
+                            </View>
+                        </TouchableOpacity> 
+        }
+
         return(
             <KeyboardAvoidingView>
                 {locationModal}                
@@ -135,6 +158,9 @@ class shopListItemModal  extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.listItem}>
                         {content}
+                        <View style={styles.buttonView}>
+                         {selectShop}
+                    </View>
                     </View>  
                     <View style={styles.buttonView}>
                         <TouchableOpacity onPress={() => this.modalView()}>
@@ -220,14 +246,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         isLoading: state.ui.isLoading,
-        searchShop: state.shops.searchShop
+        searchShop: state.shops.searchShop,
+        selectedShops: state.shops.selectedShops
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
         onDeleteShop: (key) => dispatch(deleteShop(key)),
-        onUpdateShop: (key, shopName, shopDescription, shopLocation) => dispatch(updateShop(key, shopName, shopDescription, shopLocation))
+        onUpdateShop: (key, shopName, shopDescription, shopLocation) => dispatch(updateShop(key, shopName, shopDescription, shopLocation)),
+        onSelectShop: (shop) => dispatch(selectShops(shop))
     }
 }
 

@@ -13,6 +13,7 @@ const shopListModal = (props) => {
         data= {props.shops}
         renderItem={(info) => (
             <ShopListItemModal
+                shop = {info.item}
                 shopName={info.item.name} 
                 shopLocation= {info.item.location}
                 shopDescription = {info.item.description}

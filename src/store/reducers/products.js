@@ -4,7 +4,8 @@ const initialState = {
     products: [],
     productAdded: false, 
     productUpdating: false,
-    searchProduct: ''
+    searchProduct: '',
+    selectedProducts: [],
 }
 
 const reducer = (state = initialState, action) => {

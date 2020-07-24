@@ -3,7 +3,7 @@ export { deletePlace, getPlaces, addPlace, startAddPlace, placeAdded} from './pl
 export {tryAuth, authGetToken, authAutoSignIn, authLogout} from './auth'
 export { uiStartLoading, uiStopLoading } from './ui'
 export {addProduct,productAdded,startAddProduct, getUserProducts, deleteProduct, updateProduct, startUpdateProduct, stopUpdateProduct, searchProduct, stopSearchProduct} from './products'
-export {addShop,shopAdded,startAddShop,getShops, deleteShop, updateShop, searchShop, stopSearchShop } from './shops'
+export {addShop,shopAdded,startAddShop,getShops, deleteShop, updateShop, searchShop, stopSearchShop, selectShops, clearSelectedShops } from './shops'
 export {addUser,userAdded,startAddUser,getUsers, deleteUser, updateUser, searchUser, stopSearchUser, userLogIn, userLogOut, getLoggedUser } from './users'
 export {addBill,billAdded,startAddBill, getUserBills, deleteBill, updateBill, startUpdateBill, stopUpdateBill, searchBill, stopSearchBill} from './bills'
 export {addList,listAdded,startAddList, getUserLists, deleteList, updateList, startUpdateList, stopUpdateList, searchList, stopSearchList} from './lists'

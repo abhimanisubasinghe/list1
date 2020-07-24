@@ -24,7 +24,7 @@ class ShoppingList extends Component {
           </Right>
         </Header>
                 {/* <ListForm/> */}
-                <Tabs style={styles.header} backgroundColor='#6a3982' renderTabBar={()=> <ScrollableTab style={styles.header} tabsContainerStyle={{shadowColor:'#6a3982', borderColor:'#6a3982', backgroundColor:'#6a3982'}}/>}>
+                <Tabs backgroundColor='#6a3982' renderTabBar={()=> <ScrollableTab tabsContainerStyle={{shadowColor:'#6a3982', borderColor:'#6a3982', backgroundColor:'#6a3982'}}/>}>
             <Tab heading="View" tabStyle={{backgroundColor: '#6a3982'}} textStyle={{color: '#fff'}} activeTabStyle={{backgroundColor: '#6a3982'}} activeTextStyle={{color: '#fff', fontWeight: 'bold'}}>
                 <ListForm />
               </Tab>

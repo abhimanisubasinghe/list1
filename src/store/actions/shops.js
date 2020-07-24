@@ -1,4 +1,4 @@
-import { SET_SHOPS, REMOVE_SHOP, SHOP_ADDED, START_ADD_SHOP, SEARCH_SHOP, STOP_SEARCH_SHOP} from './actionType'
+import { SET_SHOPS, REMOVE_SHOP, SHOP_ADDED, START_ADD_SHOP, SEARCH_SHOP, STOP_SEARCH_SHOP, SELECT_SHOPS, CLEAR_SELECT_SHOPS} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 export const startAddShop = () => {
@@ -223,5 +223,18 @@ export const searchShop = val => {
 export const stopSearchShop = () => {
   return {
     type: STOP_SEARCH_SHOP
+  }
+}
+
+export const selectShops = shop => {
+  return{
+    type: SELECT_SHOPS,
+    shop: shop
+  }
+}
+
+export const clearSelectedShops = () => {
+  return {
+    type: CLEAR_SELECT_SHOPS
   }
 }
