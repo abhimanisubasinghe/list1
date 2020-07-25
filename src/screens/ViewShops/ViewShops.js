@@ -111,7 +111,7 @@ class ViewShops extends Component  {
          
          return ( 
              <View 
-             style= {this.state.shopsLoaded ? null : styles.buttonContaier}
+             style= {this.state.shopsLoaded ? styles.listContainer : styles.buttonContaier}
              >
                  {content}
              </View>
@@ -126,7 +126,7 @@ class ViewShops extends Component  {
          alignItems: 'center'
      },
      listContainer: {
- 
+        paddingBottom: 100
      },
      searchButton : {
          borderColor: 'purple',

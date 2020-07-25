@@ -130,7 +130,7 @@ class ViewProduct extends Component  {
          
          return ( 
              <View 
-             style= {this.state.productsLoaded ? null : styles.buttonContaier}
+             style= {this.state.productsLoaded ? styles.listContainer : styles.buttonContaier}
              >
                  {/* <ProductList 
                  products={this.props.products}
@@ -149,7 +149,7 @@ class ViewProduct extends Component  {
          alignItems: 'center'
      },
      listContainer: {
- 
+        paddingBottom: 100
      },
      searchButton : {
          borderColor: 'purple',

@@ -15,6 +15,9 @@ const listList = (props) => {
             <ListListItem 
                 listName={info.item.name} 
                 listKey = {info.item.key}
+                list = {info.item}
+                shops = {info.item.shops}
+                dueDate = {info.item.dueDate}
             />
         )}
         /> 

@@ -99,6 +99,9 @@ class UtilityBillsView extends Component {
 const styles = StyleSheet.create({
     header:{
         color: 'purple'
+    },
+    listContainer: {
+      paddingBottom: 100
     }
 })
 

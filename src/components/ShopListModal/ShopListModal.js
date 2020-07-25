@@ -6,23 +6,19 @@ import ShopListItemModal from '../ShopListItemModal/ShopListItemModal';
 import defaultImage from '../../assets/default.jpg'
 
 const shopListModal = (props) => {
-    console.log('p',props)
-    return (
-        <FlatList 
-        style={styles.listContainer}
-        data= {props.shops}
-        renderItem={(info) => (
-            <ShopListItemModal
-                shop = {info.item}
-                shopName={info.item.name} 
-                shopLocation= {info.item.location}
-                shopDescription = {info.item.description}
-                shopKey = {info.item.key}
-                onItemPressed = {() => props.onItemSelected(info.item.key)}
-            />
-        )}
-        /> 
-    );
+    let temp = props.shops
+    return temp.map(
+        (info) => {
+            return <ShopListItemModal
+                    key = {info.key}
+                    shop = {info}
+                    shopName={info.name} 
+                    shopLocation= {info.location}
+                    shopDescription = {info.description}
+                    shopKey = {info.key}
+                />
+        }
+    )
 };
 
 const styles = StyleSheet.create({

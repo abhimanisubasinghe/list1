@@ -1,5 +1,5 @@
 import React, {Component}  from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView } from 'react-native'
 import {connect} from 'react-redux'
 import {searchProduct, stopSearchProduct, getUserProducts} from '../../store/actions/index'
 //import ProductList from '../../components/ProductList/ProductList'
@@ -11,8 +11,7 @@ class ViewProductModal extends Component  {
 
     state ={
         productsLoaded: false ,
-        removeAnimation: new Animated.Value(1),
-        productsAnim: new Animated.Value(0)
+        search: ''
      }
  
      componentDidMount(){
@@ -27,68 +26,8 @@ class ViewProductModal extends Component  {
         this.props.onSearchProduct(val);
       } 
  
-    //  componentWillUpdate(){
-    //      this.props.onLoadProducts()
-    //  }
- 
-     productsLoadedHandler = () => {
-         Animated.timing(this.state.productsAnim, {
-             toValue: 1,
-             duration: 500,
-             useNativeDriver: true
-         }).start();
-     }
- 
-     productsSearchHandler = () => {
-         Animated.timing(this.state.removeAnimation, {
-             toValue: 0,
-             duration: 500,
-             useNativeDriver: true
-         }).start(() => {
-             this.setState({
-                 productsLoaded: true
-             })
-             this.productsLoadedHandler();
-         });
- 
-     }
- 
-     itemSelectedHandler = key => {
- 
-        //  const selectedProduct = this.props.products.find(product => {
-        //      return product.key === key;
-        //  })
- 
-        //  this.props.navigation.navigate('ProductDetails',{
-        //      selectedProduct: selectedProduct,
-        //      title: selectedProduct
-        //  })
-     }
- 
      render() {
           
-         let content = (
-             <Animated.View
-             style={{
-                 opacity: this.state.removeAnimation,
-                 transform:[
-                     {
-                         scale: this.state.removeAnimation.interpolate({
-                             inputRange: [0,1],
-                             outputRange: [12, 1]
-                         })
-                     }
-                 ]
-             }}
-             >
-             <TouchableOpacity onPress={this.productsSearchHandler}>
-                 <View style={styles.searchButton}>
-                     <Text style={styles.searchButtonText}>My Products</Text>
-                 </View>
-             </TouchableOpacity>
-             </Animated.View>
-         )
-
         let products = this.props.products
         //console.log('testing', this.state.search)
         let selectedProducts = this.props.selectedProducts
@@ -138,13 +77,10 @@ class ViewProductModal extends Component  {
         //products = products.filter(item => item.userId.match(this.props.userId));
 
        // products = products.filter(item => item.userId.filter(id => id.includes(this.props.userId)));
-
-         if(this.state.productsLoaded){
-             content = (
-                 <Animated.View style={{
-                     opacity: this.state.productsAnim
-                 }}>
-                    <View style={{alignItems: 'center'}}>
+         
+         return ( 
+             <ScrollView>
+                 <View style={{alignItems: 'center'}}>
                     <DefaultInput
                         placeholder = 'search'
                         style = {{
@@ -155,24 +91,11 @@ class ViewProductModal extends Component  {
                         onChangeText={this.handleChange}
                     />
                     </View>
-                     <ProductList
-                     products={products}
-                     onItemSelected={this.itemSelectedHandler}
-                     />
-                 </Animated.View>
-             )
-         }
-         
-         return ( 
-             <View 
-             style= {this.state.productsLoaded ? null : styles.buttonContaier}
-             >
-                 {/* <ProductList 
-                 products={this.props.products}
+                 <ProductList
+                 products={products}
                  onItemSelected={this.itemSelectedHandler}
-                 /> */}
-                 {content}
-             </View>
+                 />
+             </ScrollView>
          )
      }
  }

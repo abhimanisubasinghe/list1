@@ -71,7 +71,7 @@ class UtilityForm extends Component {
             mode: 'date',
             show: false,
             billName: '',
-            amount: 0
+            amount: ''
         })
     }
 

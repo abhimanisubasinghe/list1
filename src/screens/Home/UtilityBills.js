@@ -60,7 +60,7 @@ class UtilityBills extends Component {
 
 const styles = StyleSheet.create({
     header:{
-        color: 'purple'
+        //color: 'purple'
     }
 })
 

@@ -111,7 +111,7 @@ class ViewLists extends Component  {
          
          return ( 
              <View 
-             style= {this.state.listsLoaded ? null : styles.buttonContaier}
+             style= {this.state.listsLoaded ? styles.listContainer : styles.buttonContaier}
              >
                  {content}
              </View>
@@ -126,7 +126,7 @@ class ViewLists extends Component  {
          alignItems: 'center'
      },
      listContainer: {
- 
+        paddingBottom: 100
      },
      searchButton : {
          borderColor: 'purple',

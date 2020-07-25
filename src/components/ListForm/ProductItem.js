@@ -13,7 +13,7 @@ class shopItem extends Component{
                         <Text style={styles.shopContainerText}>{this.props.productName}</Text>
                         <Text style={styles.quantityText}>{this.props.quantity}</Text>
                     </View>   
-                    <View style={{flexDirection: 'row'}}> 
+                    <View style={{flexDirection: 'row',  width:'40%'}}> 
                     <TouchableOpacity onPress={this.props.onAdd}>
                         <View style={styles.incrementButton}>
                         <Icon 
@@ -98,13 +98,13 @@ const styles = StyleSheet.create({
     },
     button: {
         padding: 2,
-        paddingLeft: 10,
-        paddingRight: 20
+        paddingLeft: 5,
+        paddingRight: 5
     },
     incrementButton: {
         padding: 2,
-        paddingLeft: 20,
-        paddingRight: 10,
+        paddingLeft: 5,
+        paddingRight: 5,
         flexDirection: 'row'
     },
     shopContainerText: {

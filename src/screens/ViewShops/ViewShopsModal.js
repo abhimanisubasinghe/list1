@@ -1,5 +1,5 @@
 import React, {Component}  from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView } from 'react-native'
 import {connect} from 'react-redux'
 
 import {getShops, searchShop, stopSearchShop} from '../../store/actions/index'
@@ -10,8 +10,6 @@ class ViewShopsModal extends Component  {
 
     state ={
         shopsLoaded: false ,
-        removeAnimation: new Animated.Value(1),
-        shopsAnim: new Animated.Value(0),
         search: ''
      }
  
@@ -19,60 +17,16 @@ class ViewShopsModal extends Component  {
          console.log('loading')
          this.props.onLoadShops()
          this.props.onStopSearchShops()
-        console.log('in shop', this.props)   
+        //console.log('in shop', this.props)   
      }
 
      handleChange = (val) => {
         this.props.onSearchShops(val);
       } 
-
- 
-     shopsLoadedHandler = () => {
-         Animated.timing(this.state.shopsAnim, {
-             toValue: 1,
-             duration: 500,
-             useNativeDriver: true
-         }).start();
-     }
- 
-     shopsSearchHandler = () => {
-         Animated.timing(this.state.removeAnimation, {
-             toValue: 0,
-             duration: 500,
-             useNativeDriver: true
-         }).start(() => {
-             this.setState({
-                 shopsLoaded: true
-             })
-             this.shopsLoadedHandler();
-         });
- 
-     }
  
  
      render() {
           
-         let content = (
-             <Animated.View
-             style={{
-                 opacity: this.state.removeAnimation,
-                 transform:[
-                     {
-                         scale: this.state.removeAnimation.interpolate({
-                             inputRange: [0,1],
-                             outputRange: [12, 1]
-                         })
-                     }
-                 ]
-             }}
-             >
-             <TouchableOpacity onPress={this.shopsSearchHandler}>
-                 <View style={styles.searchButton}>
-                     <Text style={styles.searchButtonText}>My Shops</Text>
-                 </View>
-             </TouchableOpacity>
-             </Animated.View>
-         )
  
         let shops = this.props.shops
         //console.log('testing', this.state.search)
@@ -120,13 +74,10 @@ class ViewShopsModal extends Component  {
         }
 
         console.log('loading shops', shops)
-
-         if(this.state.shopsLoaded){
-             content = (
-                 <Animated.View style={{
-                     opacity: this.state.shopsAnim
-                 }}>
-                     <View style={{alignItems: 'center'}}>
+         
+         return ( 
+            <ScrollView>
+                <View style={{alignItems: 'center'}}>
                     <DefaultInput
                         placeholder = 'search'
                         style = {{
@@ -136,21 +87,12 @@ class ViewShopsModal extends Component  {
                         value={this.props.searchShop}
                         onChangeText={this.handleChange}
                     />
-                    </View>
-                     <ShopList
+                </View>
+                <ShopList
                      shops={shops}
                      onItemSelected={this.itemSelectedHandler}
-                     />
-                 </Animated.View>
-             )
-         }
-         
-         return ( 
-             <View 
-             style= {this.state.shopsLoaded ? null : styles.buttonContaier}
-             >
-                 {content}
-             </View>
+                />
+            </ScrollView>
          )
      }
  }

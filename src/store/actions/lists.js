@@ -9,7 +9,7 @@ export const startAddList = () => {
 }
 
 export const addList = (listName, products,shops, dueDate, userEmail) => {
-  //console.log(listName, listDescription)
+  console.log('shops to be added ',shops)
   return dispatch => {
     let authToken;
     dispatch(uiStartLoading());

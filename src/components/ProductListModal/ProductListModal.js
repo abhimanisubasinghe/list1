@@ -6,27 +6,22 @@ import ProductListItemModal from '../ProductListItemModal/ProductListItemModal';
 import defaultImage from '../../assets/default.jpg'
 
 const productListModal = (props) => {
-    console.log('p',props)
-    return (
-        <FlatList 
-        style={styles.listContainer}
-        data= {props.products}
-
-        renderItem={(info) => (
-            <ProductListItemModal 
-                product = {info.item}
-                productName={info.item.name} 
-                productImage= {info.item.image}
-                productDescription = {info.item.description}
-                productKey = {info.item.key}
-                productOwner = {info.item.owner}
-                productSharedUsers = {info.item.sharedUsers}
-                onItemPressed = {() => props.onItemSelected(info.item.key)}
-
-            />
-        )}
-        /> 
-    );
+    let temp = props.products
+    return temp.map(
+        (info) => {
+            return <ProductListItemModal
+                        key = {info.key}
+                        product = {info}
+                        productName={info.name} 
+                        productImage= {info.image}
+                        productDescription = {info.description}
+                        productKey = {info.key}
+                        productOwner = {info.owner}
+                        productSharedUsers = {info.sharedUsers}
+                        //onItemPressed = {() => props.onItemSelected(info.key)}
+                    />
+        }
+    )
 };
 
 const styles = StyleSheet.create({
