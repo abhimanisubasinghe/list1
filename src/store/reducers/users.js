@@ -1,4 +1,4 @@
-import { DELETE_USER, SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER,SEARCH_USER,STOP_SEARCH_USER, LOGIN_USER, LOGOUT_USER } from '../actions/actionType'
+import { DELETE_USER, SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER,SEARCH_USER,STOP_SEARCH_USER, LOGIN_USER, LOGOUT_USER, SELECT_USERS, CLEAR_SELECT_USERS } from '../actions/actionType'
 
 const initialState = {
     users: [],
@@ -6,16 +6,35 @@ const initialState = {
     searchUser: '',
     loggedUserName: '',
     loggedUserEmail: '',
-    loggedUserContactNumber: ''
+    loggedUserContactNumber: '',
+    selectedUsers: []
 }
 
 const reducer = (state = initialState, action) => {
     switch(action.type){
         case SET_USERS:
+            console.log('on user action', action.users)
             return {
                 ...state,
                 users: action.users
             }
+
+        case SELECT_USERS: {
+            console.log('now: ',state.selectedUsers, 'adding: ', action.user)
+            let temp = state.selectedUsers.concat(action.user)
+            return{
+                ...state,
+                selectedUsers: temp
+            }
+        }
+
+        case CLEAR_SELECT_USERS: {
+            return{
+                ...state,
+                selectedUsers: []
+            }
+        }    
+
         case LOGIN_USER:{
             console.log('action in login', action)
             return{

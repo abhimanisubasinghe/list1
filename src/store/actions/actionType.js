@@ -47,6 +47,8 @@ export const SEARCH_USER = 'SEARCH_USER'
 export const STOP_SEARCH_USER = 'STOP_SEARCH_USER'
 export const LOGIN_USER = 'LOGIN_USER'
 export const LOGOUT_USER = 'LOGOUT_USER'
+export const SELECT_USERS = 'SELECT_USERS'
+export const CLEAR_SELECT_USERS = 'CLEAR_SELECT_USERS'
 
 export const SET_BILLS = 'SET_BILLS'
 export const REMOVE_BILL = 'REMOVE_BILL'

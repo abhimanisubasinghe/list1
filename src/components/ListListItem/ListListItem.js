@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import MapView from 'react-native-maps'
 
-import {deleteList, updateList } from '../../store/actions/index'
+import {deleteList, updateList, clearSelectedUsers } from '../../store/actions/index'
 
 //import ListUpdate from '../ListUpdate/ListUpdate'
 import DefaultInput from '../UI/DefaultInput/DefaultInput'
@@ -18,13 +18,17 @@ import PickLocation from '../PickLocation/PickLocation'
 import ProductItem from '../ListView/ProductItem'
 import ShopItem from '../ListView/ShopItem'
 
+import ViewUser from '../../screens/ViewUsers/ViewUsersModal'
+
 class listListItem  extends React.Component {
 
     state = {
         updateModal: false,
         listModal: false,
         productView: false,
-        shopView: false
+        shopView: false,
+        userModal: false,
+        sharedUsers: this.props.list.sharedUsers
     }
 
     shopViewHandler = () =>{
@@ -38,6 +42,19 @@ class listListItem  extends React.Component {
             return {productView: prevState.productView ? false: true} 
         })
         console.log(this.state.productView)
+    }
+
+    userViewHandler = async() =>{
+        let temp = await this.state.sharedUsers.concat(this.props.selectedUsers)
+        await this.setState(prevState => {
+            return {
+                userModal: prevState.userModal ? false: true,
+                sharedUsers: temp
+            } 
+        })
+        await console.log('selected',this.state.sharedUsers)
+        await this.props.onClearSelectedUsers()
+        await console.log('selected', this.state.sharedUsers, 'state', this.props.selectedUsers)
     }
 
     listDeletedHandler = () => {   
@@ -132,6 +149,7 @@ class listListItem  extends React.Component {
 
     componentDidMount(){
         //this.reset()
+        console.log('shared with',this.state.sharedUsers)
     }
 
     listNameChangedHandler = (val) => {
@@ -335,6 +353,36 @@ class listListItem  extends React.Component {
                         </DefaultButton>
                     </Modal>
 
+            let userModal = <Modal isVisible={this.state.userModal} style={styles.modal} keyboardShouldPersistTaps='always'>
+                <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
+                <Left>
+                    <Button transparent>
+                    <Icon name="users" size={30} color="white" />
+                    </Button>
+                </Left>
+                <Body>
+                    <Title>USERS </Title>
+                </Body>
+                <Right>
+                <TouchableOpacity>    
+                <Button transparent vertical onPress={this.userViewHandler}>
+                    <Icon name="check-circle" size={30} color="white" />
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize:15}}>Done</Text>
+                    </Button>
+                </TouchableOpacity>    
+                </Right>    
+                </Header>
+                <ScrollView>
+                    <ViewUser sharedUsers = {this.props.list.sharedUsers}/>
+                </ScrollView>
+                <DefaultButton  
+                color='green' 
+                onPress={this.userViewHandler}
+                >
+                    Done
+                </DefaultButton>
+            </Modal>    
+
         return(
             <KeyboardAvoidingView>
                 <Modal isVisible={this.state.updateModal}>
@@ -376,22 +424,24 @@ class listListItem  extends React.Component {
             {/* <TouchableHighlight onPress={() => this.modalView()}>
                  */}
                  {listModal}
+                 {userModal}
                  <TouchableOpacity onPress={() => this.listModalView()}>
                 <View style={styles.container}>
                     <View style={styles.listItem}>
-                        {content}
-                    </View>  
-                    <View style={styles.buttonView}>
-                        <TouchableOpacity onPress={() => this.modalView()}>
+                        {content} 
+                        <TouchableOpacity onPress={() => this.userViewHandler()}>
                             <View style={styles.button}>
                             <Icon 
                                 size= {30}
-                                name="map-marker-alt"
-                                color="black"
+                                name="share"
+                                color="#346da3"
                                 textAlign= "center"
                             />
                             </View>
-                        </TouchableOpacity> 
+                        </TouchableOpacity>
+                    </View>  
+                    <View style={styles.buttonView}>
+                         
                         <TouchableOpacity onPress={this.listDeletedHandler}>
                             <View style={styles.button}>
                             <Icon 
@@ -518,13 +568,15 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
     return {
         isLoading: state.ui.isLoading,
-        searchList: state.lists.searchList
+        searchList: state.lists.searchList,
+        selectedUsers: state.users.selectedUsers,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return{
         onDeleteList: (key) => dispatch(deleteList(key)),
+        onClearSelectedUsers: () => dispatch(clearSelectedUsers()),
         //onUpdateList: (key, listName, listDescription, listLocation) => dispatch(updateList(key, listName, listDescription, listLocation))
     }
 }

@@ -1,4 +1,4 @@
-import { SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER, SEARCH_USER, STOP_SEARCH_USER, LOGIN_USER, LOGOUT_USER} from './actionType'
+import { SET_USERS, REMOVE_USER, USER_ADDED, START_ADD_USER, SEARCH_USER, STOP_SEARCH_USER, LOGIN_USER, LOGOUT_USER, SELECT_USERS, CLEAR_SELECT_USERS} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 export const startAddUser = () => {
@@ -128,6 +128,7 @@ export const getLoggedUser = (email) => {
 }
 
 export const getUsers = () => {
+    console.log('loading users')
     return (dispatch) =>{
     dispatch(authGetToken())
     .catch(() =>{
@@ -164,7 +165,7 @@ export const getUsers = () => {
 }
 
 export const setUsers = (users) => {
-    //console.log(users)
+    console.log('registered users',users)
     return{
         type: SET_USERS,
         users: users
@@ -282,5 +283,19 @@ export const searchUser = val => {
 export const stopSearchUser = () => {
   return {
     type: STOP_SEARCH_USER
+  }
+}
+
+export const selectUsers = user => {
+  console.log('in action', user)
+  return{
+    type: SELECT_USERS,
+    user: user
+  }
+}
+
+export const clearSelectedUsers = () => {
+  return {
+    type: CLEAR_SELECT_USERS
   }
 }

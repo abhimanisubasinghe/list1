@@ -13,11 +13,12 @@ class shopItem extends Component{
         shopSelected: false,
         modalLocation : false,
         focusedLocation:{
-            latitude: this.props.shopLocation.latitude ,
-            longitude:this.props.shopLocation.longitude ,
+            latitude: this.props.shopLocation!==undefined?this.props.shopLocation.latitude:7.2906  ,
+            longitude:this.props.shopLocation!==undefined?this.props.shopLocation.longitude:80.6337 ,
             latitudeDelta: 0.0122,
             longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
         },
+        locationChose: true
     }
 
     shopViewHandler = () =>{
@@ -32,8 +33,8 @@ class shopItem extends Component{
             return {
                 modalLocation: prevState.modalLocation ? false : true,
                 focusedLocation:{
-                    latitude: this.props.shopLocation.latitude ,
-                    longitude:this.props.shopLocation.longitude ,
+                    latitude: this.props.shopLocation!==undefined?this.props.shopLocation.latitude:7.2906 ,
+                    longitude:this.props.shopLocation!==undefined?this.props.shopLocation.longitude:80.6337 ,
                     latitudeDelta: 0.0122,
                     longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
                 },   
@@ -49,34 +50,44 @@ class shopItem extends Component{
 
         let marker = null;
 
-        let shopModal = <Modal isVisible={this.state.modalLocation}>
-            <TouchableHighlight>
-            <Card collapsable transparent={true} style={{backgroundColor: 'rgba(255,255,255,0.1)'}}>
-            <CardItem header bordered style={{backgroundColor: '#6a3982'}}>
-                <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18,}}>{this.props.shopName}</Text>
-            </CardItem>
-            <CardItem header bordered>
-            <Body>
-            <Text style={styles.shopDescription}>{this.props.shopDescription}</Text>                                
-                <MapView
-                initialRegion={this.state.focusedLocation}
-                style={styles.map}
-                >
-                {marker}
-                </MapView>  
-            
-            </Body>
-            </CardItem>
-            <CardItem footer bordered>
-            <View style={{flexDirecttion: 'row',justifyContent:'center', alignItems: 'center'}}>    
-            <DefaultButton color='black' onPress= {this.modalView}>
-                Close
-            </DefaultButton>
-            </View>
-            </CardItem>
-        </Card>
-    </TouchableHighlight>
-    </Modal>
+        if (this.state.locationChose){
+            marker = <MapView.Marker coordinate= {this.state.focusedLocation}/>
+        }
+
+        let shopModal = null
+
+        if(this.props.shopLocation!=undefined){
+            shopModal = <Modal isVisible={this.state.modalLocation}>
+                <TouchableHighlight>
+                <Card collapsable transparent={true} style={{backgroundColor: 'rgba(255,255,255,0.1)'}}>
+                <CardItem header bordered style={{backgroundColor: '#6a3982'}}>
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18,}}>{this.props.shopName}</Text>
+                </CardItem>
+                <CardItem header bordered>
+                <Body>
+                <Text style={styles.shopDescription}>{this.props.shopDescription}</Text>                                
+                    <MapView
+                    initialRegion={this.state.focusedLocation}
+                    style={styles.map}
+                    >
+                    {marker}
+                    </MapView>  
+                
+                </Body>
+                </CardItem>
+                <CardItem footer bordered>
+                <View style={{flexDirecttion: 'row',justifyContent:'center', alignItems: 'center'}}>    
+                <DefaultButton color='black' onPress= {this.modalView}>
+                    Close
+                </DefaultButton>
+                </View>
+                </CardItem>
+            </Card>
+        </TouchableHighlight>
+        </Modal>
+        }
+
+        
 
         return(
             <TouchableOpacity style={styles.shopContainer}>
@@ -84,7 +95,7 @@ class shopItem extends Component{
                     <View style={{width:'70%'}}>
                         <Text style={styles.shopContainerText}>{this.props.shopName}</Text>
                     </View>    
-                    
+                    {this.props.shopLocation!=undefined? 
                     <TouchableOpacity onPress={() => this.modalView()}>
                         <View style={styles.button}>
                         <Icon 
@@ -95,6 +106,8 @@ class shopItem extends Component{
                         />
                         </View>
                     </TouchableOpacity>
+                    : null}
+                    
                 </TouchableOpacity> 
         )
     }

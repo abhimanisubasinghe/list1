@@ -2,7 +2,7 @@ import React, {Component}  from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, } from 'react-native'
 import {connect} from 'react-redux'
 
-import {getUserLists, searchList, stopSearchList} from '../../store/actions/index'
+import {getUserLists, searchList, stopSearchList, getUsers} from '../../store/actions/index'
 import ListList from '../../components/ListList/ListList'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 
@@ -19,7 +19,8 @@ class ViewLists extends Component  {
          console.log('loading')
          this.props.onLoadLists(this.props.email)
          this.props.onStopSearchLists()
-        console.log('in list', this.props)   
+        console.log('in list', this.props)  
+        this.props.onLoadUsers() 
      }
 
      handleChange = (val) => {
@@ -155,7 +156,8 @@ class ViewLists extends Component  {
      return {
          onLoadLists: (email) => dispatch(getUserLists(email)),
          onSearchLists: (val) => dispatch(searchList(val)),
-         onStopSearchLists: () => dispatch(stopSearchList())
+         onStopSearchLists: () => dispatch(stopSearchList()),
+         onLoadUsers: () => dispatch(getUsers())
      }
  }
  
