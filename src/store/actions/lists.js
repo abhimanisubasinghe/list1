@@ -171,7 +171,7 @@ export const stopUpdateList = () => {
   }
 }
 
-export const updateList = (key,listName, products, shops, owner, sharedUsers, done, dueDate) => {
+export const updateList = (key,listName, products, shops, owner, sharedUsers, done, dueDate, email) => {
   console.log('updating data ',owner)
     return (dispatch) => {
         dispatch(uiStartLoading());
@@ -209,14 +209,14 @@ export const updateList = (key,listName, products, shops, owner, sharedUsers, do
         .then(parsedRes => {
             console.log("Done!");
             dispatch(uiStopLoading());
-            dispatch(getUserLists(owner));
+            dispatch(getUserLists(email));
             dispatch(stopUpdateList());
         })
         .catch(err => {
             alert("Something went wrong, sorry :/");
             console.log(err);
             dispatch(uiStopLoading());
-            dispatch(getUserLists(owner));
+            dispatch(getUserLists(email));
             dispatch(stopUpdateList());
             
         })        

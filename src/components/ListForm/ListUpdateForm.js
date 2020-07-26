@@ -271,7 +271,7 @@ class ListUpdateForm extends Component {
             const sharedUsers = this.props.list.sharedUsers
             const done = this.props.list.done
             const dueDate = this.state.date
-            this.props.onUpdateList(key,listName, products, shops, owner, sharedUsers, done, dueDate)
+            this.props.onUpdateList(key,listName, products, shops, owner, sharedUsers, done, dueDate, this.props.email)
             this.reset()
             console.log(this.props.lists)
             console.log('pass')
@@ -613,7 +613,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return{
-        onUpdateList: (key,listName, products, shops, owner, sharedUsers, done, dueDate) => dispatch(updateList(key,listName, products, shops, owner, sharedUsers, done, dueDate)),
+        onUpdateList: (key,listName, products, shops, owner, sharedUsers, done, dueDate, email) => dispatch(updateList(key,listName, products, shops, owner, sharedUsers, done, dueDate, email)),
         onStartAddList: () => dispatch(startAddList()),
         onLoadUserLists: (email) => dispatch(getUserLists(email)),
         onLoadUserProducts: (email) => dispatch(getUserProducts(email)),

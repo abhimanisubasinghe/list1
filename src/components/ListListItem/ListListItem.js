@@ -45,7 +45,17 @@ class listListItem  extends React.Component {
         console.log(this.state.productView)
     }
 
+    userViewHandlerOpen = () => {
+        this.setState(prevState => {
+            return {
+                userModal: prevState.userModal ? false: true,
+                //sharedUsers: temp
+            } 
+        })    
+    }
+
     userViewHandler = async() =>{
+        //let returnUsers= this.props.selectedUsers
         let temp = await this.state.sharedUsers.concat(this.props.selectedUsers)
         await this.setState(prevState => {
             return {
@@ -56,7 +66,13 @@ class listListItem  extends React.Component {
         await console.log('selected',this.state.sharedUsers)
         await this.props.onClearSelectedUsers()
         await console.log('selected', this.state.sharedUsers, 'state', this.props.selectedUsers)
+        // if(returnUsers !== []){
+        //     await this.updateShareUser()
+        // }
+        await this.updateShareUser()
     }
+
+
 
     listDeletedHandler = () => {   
         //const popAction = StackActions.pop(1);
@@ -66,14 +82,11 @@ class listListItem  extends React.Component {
     }
 
     updateModalView = () => {
-        // this.locationPicker.changeState(this.props.listLocation)
-        //console.log(this.locationPicker)
         this.setState(prevState => {
             return{
                 updateModal: prevState.updateModal ? false : true
             }
         })
-        //this.listUpdateHandler()
 
     }
 
@@ -93,109 +106,46 @@ class listListItem  extends React.Component {
                 updateModal: prevState.updateModal ? false : true
             }
         })
-        this.listUpdateHandler()
+        
     }
 
-
-    listUpdateHandler = () => {   
-        //const popAction = StackActions.pop(1);
-        //console.log(this.props.listKey)
-        const listName = (this.state.controls.listName.value?this.state.controls.listName.value: this.props.listName )
-        const listDescription = (this.state.controls.listDetail.value?this.state.controls.listDetail.value: this.props.listDescription )
-        const listLocation = (this.state.controls.location.value?this.state.controls.location.value: this.props.listLocation )
-        //console.log(this.props.listName, this.props.listDescription, this.props.listLocation)
-        //console.log(listName, listDescription, listLocation)
-        //this.props.onUpdateList(this.props.listKey, listName, listDescription, listLocation);
-        this.reset()
-        //this.props.list.navigation.dispatch(popAction);
+    updateShareUser = () => {
+        const key = this.props.list.key
+        const listName = this.props.list.listName
+        const products = this.props.list.products
+        const shops = this.props.shops
+        const owner = this.props.list.owner
+        const sharedUsers = this.state.sharedUsers.length>1?this.state.sharedUsers:this.props.list.sharedUsers
+        const done = this.props.list.done
+        const dueDate = this.props.list.dueDate
+        this.props.onUpdateList(key,listName, products, shops, owner, sharedUsers, done, dueDate, this.props.email)
+        //this.reset()
+        console.log(this.props.lists)
+        console.log('pass')
     }
 
-    // reset = () => {
-    //     this.setState({
-    //     modalLocation : false,
-    //     updateModal: false,
-    //     controls: {
-    //         listName: {
-    //           value: this.props.listName,
-    //           valid: false,
-    //           touched: false,
-    //           validationRules: {
-    //             notEmpty: true
-    //           }
+    updateDoneList = () => {
+        const key = this.props.list.key
+        const listName = this.props.list.listName
+        const products = this.props.list.products
+        const shops = this.props.shops
+        const owner = this.props.list.owner
+        const sharedUsers = this.props.list.sharedUsers
+        const done = this.props.list.done? false: true
+        const dueDate = this.props.list.dueDate
+        this.props.onUpdateList(key,listName, products, shops, owner, sharedUsers, done, dueDate, this.props.email)
+        //this.reset()
+        console.log(this.props.lists)
+        console.log('pass')
+    }
 
-    //         },
-            
-    //         listDetail: {
-    //             value: this.props.listDescription,
-    //             valid: false,
-    //             touched: false,
-    //             validationRules: {
-    //               notEmpty: true
-    //             }
-
-    //           },
-    //         location: {
-    //             value: this.props.listLocation,
-    //             valid: true
-    //         }
-    //     },
-    //     focusedLocation:{
-    //         latitude: this.props.listLocation.latitude ,
-    //         longitude:this.props.listLocation.longitude ,
-    //         latitudeDelta: 0.0122,
-    //         longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
-    //     },
-    //     })
-    // }
 
     componentDidMount(){
         //this.reset()
         console.log('shared with',this.state.sharedUsers)
     }
 
-    listNameChangedHandler = (val) => {
-        this.setState(prevState => {
-            return {
-              controls: {
-                ...prevState.controls,
-                listName: {
-                  ...prevState.controls.listName,
-                  value: val,
-                  valid: validate(val, prevState.controls.listName.validationRules),
-                  touched: true
-                }
-              }
-            };
-          });
-    }
-
-    listDetailChangedHandler = (val) => {
-        this.setState(prevState => {
-            return {
-              controls: {
-                ...prevState.controls,
-                listDetail: {
-                  ...prevState.controls.listDetail,
-                  value: val,
-                  valid: validate(val, prevState.controls.listDetail.validationRules),
-                  touched: true
-                }
-              }
-            };
-          });
-    }
-
     render(){
-      // console.log(this.state.focusedLocation)
-
-    //   name: listName,
-    //       products: products,
-    //       shops: shops,
-    //       dueDate: dueDate,
-    //       owner: userEmail,
-    //       sharedUsers: [userEmail],
-    //       done: false
-
         let updateItem = null
 
         let updateButton = (
@@ -366,7 +316,7 @@ class listListItem  extends React.Component {
                 </Body>
                 <Right>
                 <TouchableOpacity>    
-                <Button transparent vertical onPress={this.userViewHandler}>
+                <Button transparent vertical onPress={this.userViewHandlerOpen}>
                     <Icon name="check-circle" size={30} color="white" />
                     <Text style={{color: 'white', fontWeight: 'bold', fontSize:15}}>Done</Text>
                     </Button>
@@ -412,20 +362,33 @@ class listListItem  extends React.Component {
                 <View style={styles.container}>
                     <View style={styles.listItem}>
                         {content} 
-                        <TouchableOpacity onPress={() => this.userViewHandler()}>
-                            <View style={styles.button}>
+                        <View>
+                        <Button transparent vertical onPress={() => this.userViewHandlerOpen()}>
                             <Icon 
-                                size= {30}
-                                name="share"
-                                color="#346da3"
-                                textAlign= "center"
+                            size= {30}
+                            name="share"
+                            color="#346da3"
+                            textAlign= "center" 
                             />
-                            </View>
-                        </TouchableOpacity>
+                            <Text style={{color: '#346da3', fontWeight: 'bold', fontSize:15}}>Share</Text>
+                        </Button>
+                        {/* <TouchableOpacity onPress={() => this.userViewHandler()}>
+                            <View style={styles.button}> */}
+                            <Button transparent vertical onPress={() => this.updateDoneList()}>
+                            <Icon 
+                            name={this.props.list.done?"times-circle": "check-circle"} 
+                            size={30} 
+                            color={this.props.list.done?"#a83273": "#32a896"} 
+                            />
+                            <Text style={{color: 'black', fontWeight: 'bold', fontSize:15}}>{this.props.list.done?"Mark Pending": "Mark Done"} </Text>
+                            </Button>
+
+                            {/* </View>
+                        </TouchableOpacity> */}
+                        </View>
                     </View>  
                     <View style={styles.buttonView}>
-                         
-                        <TouchableOpacity onPress={this.listDeletedHandler}>
+                         {this.props.email === this.props.list.owner? <TouchableOpacity onPress={this.listDeletedHandler}>
                             <View style={styles.button}>
                             <Icon 
                                 size= {30}
@@ -434,7 +397,8 @@ class listListItem  extends React.Component {
                                 textAlign= "center"
                             />
                             </View>
-                        </TouchableOpacity>  
+                        </TouchableOpacity>: null}
+                          
                         <TouchableOpacity onPress={() => this.updateModalView()}>
                             <View style={styles.button}>
                             <Icon 
@@ -553,6 +517,7 @@ const mapStateToProps = state => {
         isLoading: state.ui.isLoading,
         searchList: state.lists.searchList,
         selectedUsers: state.users.selectedUsers,
+        email: state.users.loggedUserEmail
     }
 }
 
@@ -560,7 +525,7 @@ const mapDispatchToProps = dispatch => {
     return{
         onDeleteList: (key) => dispatch(deleteList(key)),
         onClearSelectedUsers: () => dispatch(clearSelectedUsers()),
-        //onUpdateList: (key, listName, listDescription, listLocation) => dispatch(updateList(key, listName, listDescription, listLocation))
+        onUpdateList: (key,listName, products, shops, owner, sharedUsers, done, dueDate, email) => dispatch(updateList(key,listName, products, shops, owner, sharedUsers, done, dueDate, email)),
     }
 }
 
