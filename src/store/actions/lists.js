@@ -171,8 +171,8 @@ export const stopUpdateList = () => {
   }
 }
 
-export const updateList = (key,listName, products, shops, owner, sharedUsers, done) => {
-  console.log(owner)
+export const updateList = (key,listName, products, shops, owner, sharedUsers, done, dueDate) => {
+  console.log('updating data ',owner)
     return (dispatch) => {
         dispatch(uiStartLoading());
         dispatch(authGetToken())

@@ -45,7 +45,7 @@ class ViewProductModal extends Component  {
                 let flag = (data.key != item.key)
                 console.log(flag)
                 if(flag){
-                    if(data.owner != null){     
+                    if(data.owner !== null){     
                         count ++
                     }
                     

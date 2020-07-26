@@ -17,6 +17,7 @@ import PickLocation from '../PickLocation/PickLocation'
 
 import ProductItem from '../ListView/ProductItem'
 import ShopItem from '../ListView/ShopItem'
+import ListUpdateForm from '../ListForm/ListUpdateForm'
 
 import ViewUser from '../../screens/ViewUsers/ViewUsersModal'
 
@@ -385,39 +386,21 @@ class listListItem  extends React.Component {
 
         return(
             <KeyboardAvoidingView>
-                <Modal isVisible={this.state.updateModal}>
-                            <TouchableHighlight>
-                            <Card collapsable transparent={true} style={{backgroundColor: 'rgba(255,255,255,0.1)'}}>
-                            <CardItem bordered style={{backgroundColor: '#6a3982'}}>
-                                <Text style={{color: 'white', fontWeight: 'bold', fontSize: 18,}} >Updating: </Text>
-                                <Text style={styles.listDescription} style={{color: 'white',fontStyle: 'italic', fontSize: 16,}}>{this.props.listName}</Text>
-                            </CardItem>
-                            <CardItem bordered>
-                            <Body>
-                            {/* <DefaultInput
-                                placeholder= {this.props.listName}
-                                onChangeText= {this.listNameChangedHandler} 
-                                value={this.state.controls.listName.value}
-                                style={styles.inputField}
-                                /> 
-                                <DefaultInput
-                                placeholder= {this.props.listDescription}
-                                onChangeText= {this.listDetailChangedHandler} 
-                                multiline = {true}
-                                numberOfLines= {5}
-                                value={this.state.controls.listDetail.value}
-                                style={styles.inputField}
-                                /> */}
-                            </Body>
-                            </CardItem>
-                            <CardItem footer bordered>
-                            {updateButton}
-                            <DefaultButton color='black' onPress= {this.updateModalView}>
-                                Close
-                            </DefaultButton>
-                            </CardItem>
-                        </Card>
-                    </TouchableHighlight>
+                <Modal isVisible={this.state.updateModal} style={styles.modal} keyboardShouldPersistTaps='always'>
+                <Header style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
+                <Body>
+                    <Title>{this.props.list.name} </Title>
+                </Body>
+                <Right>
+                <TouchableOpacity>    
+                <Button transparent vertical onPress={this.updateModalView}>
+                    <Icon name="times-circle" size={30} color="white" />
+                    <Text style={{color: 'white', fontWeight: 'bold', fontSize:15}}>Close</Text>
+                    </Button>
+                </TouchableOpacity>    
+                </Right>    
+                </Header>       
+                            <ListUpdateForm list = {this.props.list} onClose= {() => this.updateModalView()}/>   
                 </Modal>
         
                 

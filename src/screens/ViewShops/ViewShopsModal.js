@@ -45,7 +45,7 @@ class ViewShopsModal extends Component  {
                 let flag = (data.key != item.key)
                 console.log(flag)
                 if(flag){
-                    if(data.location != null){
+                    if(data.location !== null){
                         
                         count ++
                     }
