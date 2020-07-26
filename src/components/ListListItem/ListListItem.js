@@ -334,6 +334,10 @@ class listListItem  extends React.Component {
                 </DefaultButton>
             </Modal>    
 
+            let item = null
+
+            
+
         return(
             <KeyboardAvoidingView>
                 <Modal isVisible={this.state.updateModal} style={styles.modal} keyboardShouldPersistTaps='always'>
@@ -359,7 +363,15 @@ class listListItem  extends React.Component {
                  {listModal}
                  {userModal}
                  <TouchableOpacity onPress={() => this.listModalView()}>
-                <View style={styles.container}>
+                <View 
+                style={this.props.list.done? styles.doneContainer
+                :new Date(temp) < today ?
+                styles.overDueContainer
+                :new Date(temp) <= tomorrow?
+                styles.warningContainer
+                :styles.container   
+                }
+                >
                     <View style={styles.listItem}>
                         {content} 
                         <View>
@@ -429,6 +441,47 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         borderRadius: 25,
+    },
+    warningContainer: {
+        backgroundColor: "rgba(237, 206, 133,0.5)",  
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+        padding: 10,
+        borderRadius: 25,
+        borderColor: 'orange',
+        borderWidth: 2,
+    },
+    overDueContainer: {
+        backgroundColor: "rgba(237, 138, 133,0.5)",  
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+        padding: 10,
+        borderRadius: 25,
+        borderColor: 'red',
+        borderWidth: 2,
+    },
+    doneContainer:{
+        backgroundColor: "rgba(133, 237, 156,0.5)",  
+        width: '95%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 10,
+        padding: 10,
+        borderRadius: 25,
+        borderColor: 'green',
+        borderWidth: 2,
+    },
+    listItem: {
+        width: "100%",
+        marginBottom: 5,
+        padding: 10,
+        backgroundColor: "rgba(0,0,0,0)",
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     listItem: {
         width: "100%",
