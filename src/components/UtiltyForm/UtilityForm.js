@@ -1,7 +1,6 @@
 import React, {Component}  from 'react'
 import {View, Text, StyleSheet, Platform, Button} from 'react-native'
 import { Content, DatePicker, Container, Header, Left, Body, Right, Title, Subtitle ,  } from 'native-base';
-import { ColorPicker } from 'react-native-color-picker';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DefaultInput from '../UI/DefaultInput/DefaultInput';
 import DefaultButton from '../UI/DefaultButton/DefaultButton';
