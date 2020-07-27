@@ -15,20 +15,6 @@ class ViewShops extends Component  {
         search: '',
         //refreshing: false
      }
-
-    //  wait = (timeout) => {
-    //     return new Promise(resolve => {
-    //       setTimeout(resolve, timeout);
-    //     });
-    //   }
-
-    //   onRefresh = React.useCallback(() => {
-    //     this.setState(prevState => {
-    //         return {refreshing: true}
-    //     })
-    
-    //     wait(2000).then(() => setRefreshing(false));
-    //   }, []);
     
  
      componentDidMount(){
