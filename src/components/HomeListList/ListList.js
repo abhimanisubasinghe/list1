@@ -1,0 +1,34 @@
+import React from 'react';
+import { FlatList, StyleSheet, ScrollView } from 'react-native';
+
+import ListListItem from '../HomeListListItem/ListListItem';
+
+import defaultImage from '../../assets/default.jpg'
+
+const listList = (props) => {
+    console.log('p',props)
+    return (
+        <FlatList 
+        style={styles.listContainer}
+        data= {props.lists}
+        horizontal ={true}
+        renderItem={(info) => (
+            <ListListItem 
+                listName={info.item.name} 
+                listKey = {info.item.key}
+                list = {info.item}
+                shops = {info.item.shops}
+                dueDate = {info.item.dueDate}
+            />
+        )}
+        /> 
+    );
+};
+
+const styles = StyleSheet.create({
+    listContainer: {
+      width: "100%"
+    }
+});
+
+export default listList;

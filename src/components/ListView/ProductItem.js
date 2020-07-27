@@ -20,7 +20,7 @@ class productItem extends Component{
 
     render(){
         console.log(this.props)
-        //console.log(this.props.product)
+        //console.log(this.props.product.image)
         //let product = this.props.product
         let content = <View style={styles.textContainer}>
                         <Text style={styles.productName}>{this.props.productName}</Text>
@@ -42,7 +42,7 @@ class productItem extends Component{
                                 <View style={styles.listItem}>
                                     
                                     <Image
-                                        source={this.props.productImage?this.props.productImage: defaultImage }
+                                        source={this.props.product.image!==undefined?this.props.product.image: defaultImage }
                                         style= {styles.productImage}
                                         resizeMode = "cover"
                                     />

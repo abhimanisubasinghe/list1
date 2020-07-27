@@ -1,5 +1,5 @@
 import React, {Component}  from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions,  RefreshControl,} from 'react-native'
 import {connect} from 'react-redux'
 
 import {getShops, searchShop, stopSearchShop} from '../../store/actions/index'
@@ -12,8 +12,24 @@ class ViewShops extends Component  {
         shopsLoaded: false ,
         removeAnimation: new Animated.Value(1),
         shopsAnim: new Animated.Value(0),
-        search: ''
+        search: '',
+        refreshing: false
      }
+
+     wait = (timeout) => {
+        return new Promise(resolve => {
+          setTimeout(resolve, timeout);
+        });
+      }
+
+      onRefresh = React.useCallback(() => {
+        this.setState(prevState => {
+            return {refreshing: true}
+        })
+    
+        wait(2000).then(() => setRefreshing(false));
+      }, []);
+    
  
      componentDidMount(){
          console.log('loading')
@@ -110,11 +126,14 @@ class ViewShops extends Component  {
          }
          
          return ( 
-             <View 
+             <ScrollView 
              style= {this.state.shopsLoaded ? styles.listContainer : styles.buttonContaier}
+             refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
              >
                  {content}
-             </View>
+             </ScrollView>
          )
      }
  }

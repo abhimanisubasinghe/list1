@@ -233,7 +233,7 @@ class ViewLists extends Component  {
          alignItems: 'center'
      },
      listContainer: {
-        paddingBottom: 100
+        paddingBottom: 200
      },
      searchButton : {
          borderColor: 'purple',
