@@ -3,6 +3,7 @@ import {View, Button,Text, StyleSheet, Dimensions} from 'react-native';
 import MapView from 'react-native-maps';
 
 import GeoLocation from '@react-native-community/geolocation'
+import Alerts from '../Alerts/Alerts'
 
 class PickLocation extends Component{
     
@@ -13,7 +14,66 @@ class PickLocation extends Component{
             latitudeDelta: 0.0122,
             longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
         },
-        locationChose: this.props.loactionChose ? true: false 
+        locationChose: this.props.loactionChose ? true: false,
+        errorAlert: false,
+        errorMsg: '',
+        successAlert: false,
+        successMsg: '',
+        infoAlert:false,
+        infoMsg: ''
+    }
+    showErrorAlert = (msg) => {
+        this.setState(prevState => {
+          return{
+              errorMsg: msg,
+              errorAlert: true
+          }
+        })
+      }
+    
+      hideErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+            errorMsg: '',
+              errorAlert: false
+          }
+        })
+      }
+    
+    showSuccessAlert = (msg) => {
+    this.setState(prevState => {
+        return{
+            successMsg: msg,
+            successAlert: true
+        }
+    })
+    }
+
+    hideSuccessAlert = ()  => {
+    this.setState(prevState => {
+        return{
+            successMsg: '',
+            successAlert: false
+        }
+    })
+    }  
+
+    showInfoAlert = (msg) => {
+        this.setState(prevState => {
+            return{
+                infoMsg: msg,
+                infoAlert: true
+            }
+        })
+        }
+    
+    hideInfoAlert = ()  => {
+    this.setState(prevState => {
+        return{
+            infoMsg: '',
+            infoAlert: false
+        }
+    })
     }
 
     reset = () => {
@@ -24,7 +84,13 @@ class PickLocation extends Component{
                 latitudeDelta: 0.0122,
                 longitudeDelta: Dimensions.get("window").width/ Dimensions.get("window").height * 0.0122
             },
-            locationChose: false
+            locationChose: false,
+            errorAlert: false,
+            errorMsg: '',
+            successAlert: false,
+            successMsg: '',
+            infoAlert:false,
+            infoMsg: ''
         })
     }
 
@@ -81,8 +147,7 @@ class PickLocation extends Component{
             this.pickLocationHandler(coordsEvent)
         }, err => {
             console.log(err)
-            alert(`Fetching the Position failed,
-             please pick one manually!`)
+            this.showErrorAlert('Fetching the Position failed,please pick one manually!')
         })
     }
 
@@ -104,6 +169,7 @@ class PickLocation extends Component{
         // if(this.props.lat !== this.state.focusedLocation.latitude && this.props.lat !== ''){
         //     this.changeState()
         // }
+        
         let marker = null;
 
         if (this.state.locationChose){
@@ -112,6 +178,9 @@ class PickLocation extends Component{
 
         return(
             <View style={styles.container}>
+                <Alerts alert={this.state.successAlert} onHideAlert={() => this.hideSuccessAlert()} type='success' message={this.state.successMsg} title='Success!'/>
+                <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message={this.state.errorMsg} title='Error!'/>
+                <Alerts alert={this.state.infoAlert} onHideAlert={() => this.hideInfoAlert()} type='error' message={this.state.infoMsg} title='Info!'/>
                 <MapView
                 initialRegion={this.state.focusedLocation}
                 //region={!this.state.locationChosen ? this.state.focusedLocation : null}

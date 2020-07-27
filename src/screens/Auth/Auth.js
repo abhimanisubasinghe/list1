@@ -9,6 +9,7 @@ import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 import DefaultButton from '../../components/UI/DefaultButton/DefaultButton'
 import validate from '../../utils/validation'
 import {tryAuth, authAutoSignIn } from '../../store/actions/index'
+import Alerts from '../../components/Alerts/Alerts'
 
 class Auth extends Component {
 
@@ -257,24 +258,7 @@ class Auth extends Component {
                     {confirmPassword}
                     {submitButton}
                 </View>
-                <AwesomeAlert
-                show={errorAlert}
-                useNativeDriver = {true}
-                showProgress={false}
-                contentContainerStyle={styles.errorMsg}
-                titleStyle={styles.titleStyle}
-                messageStyle={styles.messageStyle}
-                title="Error!"
-                message="Validation Error, Try Again!"
-                closeOnTouchOutside={true}
-                closeOnHardwareBackPress={false}
-                showConfirmButton={true}
-                confirmText="Ok"
-                confirmButtonColor="#DD6B55"
-                onConfirmPressed={() => {
-                    this.hideErrorAlert()
-                }}
-                />
+                <Alerts alert={errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message='Validation Error, Try Again!' title='Error!'/>
                 </KeyboardAvoidingView>
             </ImageBackground>    
         )

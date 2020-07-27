@@ -6,10 +6,17 @@ import {addProduct, startAddProduct, getProducts, getUserProducts} from '../../s
 import PickImage from '../../components/PickImage/PickImage'
 import validate from '../../utils/validation'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
+import Alerts from '../../components/Alerts/Alerts'
 
 class AddProduct extends Component {
 
     state ={
+        errorAlert: false,
+        errorMsg: '',
+        successAlert: false,
+        successMsg: '',
+        infoAlert:false,
+        infoMsg: '',
         controls: {
                 productName: {
                   value: "",
@@ -35,6 +42,60 @@ class AddProduct extends Component {
                 }
             }
     }
+
+    showErrorAlert = (msg) => {
+      this.setState(prevState => {
+        return{
+            errorMsg: msg,
+            errorAlert: true
+        }
+      })
+    }
+  
+    hideErrorAlert = () => {
+      this.setState(prevState => {
+        return{
+          errorMsg: '',
+            errorAlert: false
+        }
+      })
+    }
+  
+  showSuccessAlert = (msg) => {
+  this.setState(prevState => {
+      return{
+          successMsg: msg,
+          successAlert: true
+      }
+  })
+  }
+
+  hideSuccessAlert = ()  => {
+  this.setState(prevState => {
+      return{
+          successMsg: '',
+          successAlert: false
+      }
+  })
+  }  
+
+  showInfoAlert = (msg) => {
+      this.setState(prevState => {
+          return{
+              infoMsg: msg,
+              infoAlert: true
+          }
+      })
+      }
+  
+  hideInfoAlert = ()  => {
+  this.setState(prevState => {
+      return{
+          infoMsg: '',
+          infoAlert: false
+      }
+  })
+  }
 
     productNameChangedHandler = (val) => {
         this.setState(prevState => {
@@ -70,6 +131,12 @@ class AddProduct extends Component {
 
     reset = () => {
         this.setState({
+            errorAlert: false,
+            errorMsg: '',
+            successAlert: false,
+            successMsg: '',
+            infoAlert:false,
+            infoMsg: '',
             controls: {
                 productName: {
                   value: "",
@@ -126,12 +193,17 @@ class AddProduct extends Component {
 
     productAddedHandler = () => {
         //console.log(this.props.user.Id)
-        this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value,this.props.email)
-        alert(`You added ${this.state.controls.productName.value}`)
-        this.reset()
-        this.imagePicker.reset()
+        if(this.state.controls.image.value && this.state.controls.productName.value && this.state.controls.productDetail.value){
+          this.showInfoAlert(`Product successfully added`)
+          this.props.onAddProduct(this.state.controls.productName.value, this.state.controls.productDetail.value, this.state.controls.image.value,this.props.email)
+          this.reset()
+          this.imagePicker.reset()
+        }
+        else{
+          this.showErrorAlert('Validation Error!')
+        }
         //this.props.onLoadProducts()
-        console.log(this.props.products)
+        //console.log(this.props.products)
         //this.locationPicker.reset()
     }
 
@@ -152,6 +224,9 @@ class AddProduct extends Component {
 
         return (
             <ScrollView >
+                <Alerts alert={this.state.successAlert} onHideAlert={() => this.hideSuccessAlert()} type='success' message={this.state.successMsg} title='Success!'/>
+                  <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message={this.state.errorMsg} title='Error!'/>
+                  <Alerts alert={this.state.infoAlert} onHideAlert={() => this.hideInfoAlert()} type='error' message={this.state.infoMsg} title='Info!'/>
                 <View style={styles.container}>
                 <Text style={styles.headerTitle}> Add your product </Text>
                 <DefaultInput

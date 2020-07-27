@@ -1,4 +1,4 @@
-import { SET_LISTS, REMOVE_LIST, LIST_ADDED, START_ADD_LIST, START_UPDATE_LIST, STOP_UPDATE_LIST, SEARCH_LIST, STOP_SEARCH_LIST} from './actionType'
+import { SET_LISTS, REMOVE_LIST, LIST_ADDED, START_ADD_LIST, START_UPDATE_LIST, STOP_UPDATE_LIST, SEARCH_LIST, STOP_SEARCH_LIST, INITIAL_LISTS} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 
@@ -241,5 +241,11 @@ export const searchList = val => {
 export const stopSearchList = () => {
   return {
     type: STOP_SEARCH_LIST
+  }
+}
+
+export const setInitialStateLists = () => {
+  return {
+    type: INITIAL_LISTS
   }
 }

@@ -1,4 +1,4 @@
-import { DELETE_LIST, SET_LISTS, REMOVE_LIST, LIST_ADDED, START_ADD_LIST, STOP_UPDATE_LIST, START_UPDATE_LIST, SEARCH_LIST, STOP_SEARCH_LIST} from '../actions/actionType'
+import { DELETE_LIST, SET_LISTS, REMOVE_LIST, LIST_ADDED, START_ADD_LIST, STOP_UPDATE_LIST, START_UPDATE_LIST, SEARCH_LIST, STOP_SEARCH_LIST, INITIAL_LISTS} from '../actions/actionType'
 
 const initialState = {
     lists: [],
@@ -15,6 +15,16 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 lists: action.lists
             }
+        
+        case INITIAL_LISTS: {
+            console.log('clearing lists')
+            return {
+                lists: [],
+                listAdded: false, 
+                listUpdating: false,
+                searchList: ''
+            }
+        }
 
         case SEARCH_LIST: {
             return{

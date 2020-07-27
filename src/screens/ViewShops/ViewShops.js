@@ -1,5 +1,5 @@
 import React, {Component}  from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions,  RefreshControl,} from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions,  RefreshControl, ScrollView} from 'react-native'
 import {connect} from 'react-redux'
 
 import {getShops, searchShop, stopSearchShop} from '../../store/actions/index'
@@ -13,22 +13,22 @@ class ViewShops extends Component  {
         removeAnimation: new Animated.Value(1),
         shopsAnim: new Animated.Value(0),
         search: '',
-        refreshing: false
+        //refreshing: false
      }
 
-     wait = (timeout) => {
-        return new Promise(resolve => {
-          setTimeout(resolve, timeout);
-        });
-      }
+    //  wait = (timeout) => {
+    //     return new Promise(resolve => {
+    //       setTimeout(resolve, timeout);
+    //     });
+    //   }
 
-      onRefresh = React.useCallback(() => {
-        this.setState(prevState => {
-            return {refreshing: true}
-        })
+    //   onRefresh = React.useCallback(() => {
+    //     this.setState(prevState => {
+    //         return {refreshing: true}
+    //     })
     
-        wait(2000).then(() => setRefreshing(false));
-      }, []);
+    //     wait(2000).then(() => setRefreshing(false));
+    //   }, []);
     
  
      componentDidMount(){
@@ -126,14 +126,14 @@ class ViewShops extends Component  {
          }
          
          return ( 
-             <ScrollView 
+             <View 
              style= {this.state.shopsLoaded ? styles.listContainer : styles.buttonContaier}
-             refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
+            //  refreshControl={
+            //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            //   }
              >
                  {content}
-             </ScrollView>
+             </View>
          )
      }
  }

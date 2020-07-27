@@ -18,6 +18,7 @@ import ShopItem from './ShopItem'
 import ProductItem from './ProductItem'
 
 import {addList, startAddList, getUserLists, getShops, getUserProducts, clearSelectedShops, clearSelectedProducts, updateList} from '../../store/actions/index'
+import Alerts from '../Alerts/Alerts'
 
 class ListUpdateForm extends Component {
 
@@ -33,8 +34,69 @@ class ListUpdateForm extends Component {
         tempShop : '',
         tempProduct: '',
         productView: false,
-        shopView: false
+        shopView: false,
+        errorAlert: false,
+        errorMsg: '',
+        successAlert: false,
+        successMsg: '',
+        infoAlert:false,
+        infoMsg: ''
     }
+
+    showErrorAlert = (msg) => {
+        this.setState(prevState => {
+          return{
+              errorMsg: msg,
+              errorAlert: true
+          }
+        })
+      }
+    
+      hideErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+            errorMsg: '',
+              errorAlert: false
+          }
+        })
+      }
+    
+    showSuccessAlert = (msg) => {
+    this.setState(prevState => {
+        return{
+            successMsg: msg,
+            successAlert: true
+        }
+    })
+    }
+
+    hideSuccessAlert = ()  => {
+    this.setState(prevState => {
+        return{
+            successMsg: '',
+            successAlert: false
+        }
+    })
+    }  
+
+    showInfoAlert = (msg) => {
+        this.setState(prevState => {
+            return{
+                infoMsg: msg,
+                infoAlert: true
+            }
+        })
+        }
+    
+    hideInfoAlert = ()  => {
+    this.setState(prevState => {
+        return{
+            infoMsg: '',
+            infoAlert: false
+        }
+    })
+    }
+
 
     shopViewHandler = () =>{
         this.setState(prevState => {
@@ -119,7 +181,8 @@ class ListUpdateForm extends Component {
         if (index !== -1) {
             console.log(array[index].quantity);
             if(array[index].quantity == 1){
-                alert('product is removed')
+                //alert('product is removed')
+                this.showInfoAlert('Product is removed')
                 this.deleteProduct(product)
             }
             else{
@@ -177,7 +240,7 @@ class ListUpdateForm extends Component {
             //await console.log('selected', this.state.shops, 'state', this.props.selectedShops)
         }
         else{
-            alert('Enter a valid name')
+            this.showErrorAlert('Enter a valid name')
         }
     }
 
@@ -208,7 +271,7 @@ class ListUpdateForm extends Component {
             await console.log('selected',this.state.products)
         }
         else{
-            alert('Enter a valid product name')
+            this.showErrorAlert('Enter a valid product name')
         }
     }
     
@@ -246,7 +309,13 @@ class ListUpdateForm extends Component {
             tempShop : '',
             tempProduct: '',
             productView: false,
-            shopView: false
+            shopView: false,
+            errorAlert: false,
+            errorMsg: '',
+            successAlert: false,
+            successMsg: '',
+            infoAlert:false,
+            infoMsg: ''
         })
     }
 
@@ -278,7 +347,7 @@ class ListUpdateForm extends Component {
             this.props.onClose()
         }
         else{
-            alert('Validation error')
+            this.showErrorAlert('Validation error')
         }
         
     }
@@ -398,6 +467,9 @@ class ListUpdateForm extends Component {
             <ScrollView keyboardShouldPersistTaps='always'>
                 {shopModal}
                 {productModal}
+                <Alerts alert={this.state.successAlert} onHideAlert={() => this.hideSuccessAlert()} type='success' message={this.state.successMsg} title='Success!'/>
+                <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message={this.state.errorMsg} title='Error!'/>
+                <Alerts alert={this.state.infoAlert} onHideAlert={() => this.hideInfoAlert()} type='error' message={this.state.infoMsg} title='Info!'/>
                 <Text style={styles.header}> Update your List </Text>
                 <DefaultInput
                     placeholder = 'Enter your list name'

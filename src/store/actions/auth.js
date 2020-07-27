@@ -1,5 +1,5 @@
 import {TRY_AUTH, AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN} from './actionType';
-import {uiStartLoading, uiStopLoading, addUser} from './index';
+import {uiStartLoading, uiStopLoading, addUser, removeUser,userLogOut, setInitialStateLists, setInitialStateBills, setInitialStateProducts} from './index';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getLoggedUser } from './users';
 
@@ -246,6 +246,10 @@ export const authLogout = (nav) => {
       nav.navigation.push('Login');
     });
     dispatch(authRemoveToken());
+    dispatch(userLogOut());
+    dispatch(setInitialStateProducts());
+    dispatch(setInitialStateBills());
+    dispatch(setInitialStateLists());
   };
 };
 

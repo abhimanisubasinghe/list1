@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, Image, Button, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, TouchableHighlight, ImageBackground } from 'react-native';
 import { Container, Header, Content, Thumbnail, Left, Body, Title, Right, Footer} from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import Modal from 'react-native-modal';
@@ -21,6 +21,7 @@ import Shops from '../Home/Shops'
 import UtilityBills from '../Home/UtilityBills'
 import ShoppingList from '../Home/ShoppingList'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import hi from '../../assets/hi.jpg'
 
   function MapIcon() {
     return (
@@ -62,19 +63,26 @@ function CustomDrawerContent({ progress, ...rest }) {
           </View>
         </TouchableOpacity>
         <Modal isVisible={isModalVisible}>
+        
           <View style={styles.profileModal}>
             <Container>
             <Header span noLeft style={styles.header} androidStatusBarColor='black' backgroundColor='#6a3982'>
                 
             <Left/>
             <Body>
-              <Title>{rest.children[3]}</Title>
+              <Title>Hi {rest.children[3]}, </Title>
             </Body>
             <Right />
           </Header>
+          <ImageBackground source={hi} style={styles.backgroundImg}>
           <View style={styles.content}>
-          <Text>Hello!</Text>
+          <Text style={styles.introText}>Your registered email: </Text>
+          <Text style={styles.detailText}>{rest.children[1]}</Text>
+          <Text style={styles.introText}>Your registered contact number: </Text>
+          <Text style={styles.detailText}>{rest.children[2]}</Text>
+          
             </View>
+            </ImageBackground>
             <Button color='#6a3982' title="BACK" onPress={toggleModal} />
         </Container>
             
@@ -206,12 +214,32 @@ const styles = StyleSheet.create({
     flex: 1
   },
   profileText: {
-    padding: 20,
+    padding: 8,
     color: 'black',
     fontWeight: 'bold',
     fontSize: 18,
-    width: '60%',
+    width: '50%',
     //height: 100
+  },
+  backgroundImg:{
+    width: '100%',
+    flex:1,
+    //alignContent: 'center',
+    //alignItems: 'center',
+    justifyContent: 'flex-end',
+},
+  introText: {
+    margin: 5,
+    marginLeft: 10,
+    fontWeight: '300',
+    fontSize: 14,
+    color: 'purple'    
+  },
+  detailText: {
+    margin: 5,
+    marginLeft: 20,
+    fontWeight: 'bold',
+    fontSize: 16 
   }
 })
 

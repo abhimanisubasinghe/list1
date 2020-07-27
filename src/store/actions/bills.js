@@ -1,4 +1,4 @@
-import { SET_BILLS, REMOVE_BILL, BILL_ADDED, START_ADD_BILL, START_UPDATE_BILL, STOP_UPDATE_BILL, SEARCH_BILL, STOP_SEARCH_BILL} from './actionType'
+import { SET_BILLS, REMOVE_BILL, BILL_ADDED, START_ADD_BILL, START_UPDATE_BILL, STOP_UPDATE_BILL, SEARCH_BILL, STOP_SEARCH_BILL, INITIAL_BILLS} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 
@@ -239,5 +239,11 @@ export const searchBill = val => {
 export const stopSearchBill = () => {
   return {
     type: STOP_SEARCH_BILL
+  }
+}
+
+export const setInitialStateBills = () => {
+  return {
+    type: INITIAL_BILLS
   }
 }

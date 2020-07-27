@@ -1,4 +1,4 @@
-import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, START_UPDATE_PRODUCT, STOP_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT, SELECT_PRODUCTS, CLEAR_SELECT_PRODUCTS} from './actionType'
+import { SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, START_UPDATE_PRODUCT, STOP_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT, SELECT_PRODUCTS, CLEAR_SELECT_PRODUCTS, INITIAL_PRODUCTS} from './actionType'
 import { uiStopLoading, uiStartLoading, authGetToken, } from './index'
 
 
@@ -315,5 +315,11 @@ export const selectProducts = product => {
 export const clearSelectedProducts = () => {
   return {
     type: CLEAR_SELECT_PRODUCTS
+  }
+}
+
+export const setInitialStateProducts = () => {
+  return {
+    type: INITIAL_PRODUCTS
   }
 }

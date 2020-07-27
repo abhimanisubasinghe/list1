@@ -1,4 +1,4 @@
-import { DELETE_PRODUCT, SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, STOP_UPDATE_PRODUCT, START_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT, SELECT_PRODUCTS, CLEAR_SELECT_PRODUCTS} from '../actions/actionType'
+import { DELETE_PRODUCT, SET_PRODUCTS, REMOVE_PRODUCT, PRODUCT_ADDED, START_ADD_PRODUCT, STOP_UPDATE_PRODUCT, START_UPDATE_PRODUCT, SEARCH_PRODUCT, STOP_SEARCH_PRODUCT, SELECT_PRODUCTS, CLEAR_SELECT_PRODUCTS, INITIAL_PRODUCTS} from '../actions/actionType'
 
 const initialState = {
     products: [],
@@ -15,6 +15,17 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 products: action.products
             }
+        
+        case INITIAL_PRODUCTS: {
+            console.log('clearing products')
+            return{
+                products: [],
+                productAdded: false, 
+                productUpdating: false,
+                searchProduct: '',
+                selectedProducts: [],
+            }
+        }
 
         case SEARCH_PRODUCT: {
             return{

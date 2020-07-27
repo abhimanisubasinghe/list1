@@ -19,6 +19,8 @@ import ProductItem from './ProductItem'
 
 import {addList, startAddList, getUserLists, getShops, getUserProducts, clearSelectedShops, clearSelectedProducts} from '../../store/actions/index'
 
+import Alerts from '../Alerts/Alerts'
+
 class ListForm extends Component {
 
     state = {
@@ -33,7 +35,58 @@ class ListForm extends Component {
         tempShop : '',
         tempProduct: '',
         productView: false,
-        shopView: false
+        shopView: false,
+        errorAlert: false,
+        successAlert: false,
+        infoAlert:false
+    }
+
+    showErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+              errorAlert: true
+          }
+        })
+      }
+    
+      hideErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+              errorAlert: false
+          }
+        })
+      }
+    
+    showSuccessAlert = () => {
+    this.setState(prevState => {
+        return{
+            successAlert: true
+        }
+    })
+    }
+
+    hideSuccessAlert = ()  => {
+    this.setState(prevState => {
+        return{
+            successAlert: false
+        }
+    })
+    }  
+
+    showInfoAlert = () => {
+        this.setState(prevState => {
+            return{
+                infoAlert: true
+            }
+        })
+        }
+    
+    hideInfoAlert = ()  => {
+    this.setState(prevState => {
+        return{
+            infoAlert: false
+        }
+    })
     }
 
     shopViewHandler = () =>{
@@ -177,7 +230,8 @@ class ListForm extends Component {
             //await console.log('selected', this.state.shops, 'state', this.props.selectedShops)
         }
         else{
-            alert('Enter a valid name')
+            //alert('Enter a valid name')
+            <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message='Enter a valid name' title='Error!'/>
         }
     }
 
@@ -208,7 +262,8 @@ class ListForm extends Component {
             await console.log('selected',this.state.products)
         }
         else{
-            alert('Enter a valid product name')
+           // alert('Enter a valid product name')
+            <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message='Enter a valid product name' title='Error!'/>
         }
     }
     
@@ -246,7 +301,13 @@ class ListForm extends Component {
             tempShop : '',
             tempProduct: '',
             productView: false,
-            shopView: false
+            shopView: false,
+            errorAlert: false,
+            errorMsg: '',
+            successAlert: false,
+            successMsg: '',
+            infoAlert:false,
+            infoMsg: ''
         })
     }
 
@@ -260,13 +321,16 @@ class ListForm extends Component {
     submitHandler = () => {
         //listName, products,shops, dueDate, userEmail
         if(this.state.listName && this.state.products && (this.state.date >= new Date()) && this.state.products.length > 0){
+            this.showSuccessAlert()
             this.props.onAddList(this.state.listName, this.state.products,this.state.shops, this.state.date, this.props.email)
             this.reset()
             console.log(this.props.lists)
             console.log('pass')
+            this.showSuccessAlert()
+            
         }
         else{
-            alert('Validation error')
+            this.showErrorAlert()
         }
         
     }
@@ -410,6 +474,8 @@ class ListForm extends Component {
 
         return(
             <View>
+                <Alerts alert={this.state.successAlert} onHideAlert={() => this.hideSuccessAlert()} type='success' message='Your list is being created' title='Success!'/>
+                <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message='Validation Error, Try Again!' title='Error!'/>
             <ScrollView keyboardShouldPersistTaps='always'>
                 {shopModal}
                 {productModal}

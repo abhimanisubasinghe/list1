@@ -1,4 +1,4 @@
-import { DELETE_BILL, SET_BILLS, REMOVE_BILL, BILL_ADDED, START_ADD_BILL, STOP_UPDATE_BILL, START_UPDATE_BILL, SEARCH_BILL, STOP_SEARCH_BILL} from '../actions/actionType'
+import { DELETE_BILL, SET_BILLS, REMOVE_BILL, BILL_ADDED, START_ADD_BILL, STOP_UPDATE_BILL, START_UPDATE_BILL, SEARCH_BILL, STOP_SEARCH_BILL, INITIAL_BILLS} from '../actions/actionType'
 
 const initialState = {
     bills: [],
@@ -15,6 +15,15 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 bills: action.bills
             }
+
+        case INITIAL_BILLS:
+            console.log('cleared bills')
+            return {
+                bills: [],
+                billAdded: false, 
+                billUpdating: false,
+                searchBill: '' 
+            }    
 
         case SEARCH_BILL: {
             return{

@@ -7,6 +7,7 @@ import DefaultButton from '../UI/DefaultButton/DefaultButton';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {connect} from 'react-redux';
 import {addBill, startAddBill, getUserBills} from '../../store/actions/index'
+import Alerts from '../Alerts/Alerts'
 
 class UtilityForm extends Component {
 
@@ -15,8 +16,28 @@ class UtilityForm extends Component {
         mode: 'date',
         show: false,
         billName: '',
-        amount: ''
+        amount: '',
+        errorAlert: false,
+        errorMsg: '',
     }
+
+    showErrorAlert = (msg) => {
+        this.setState(prevState => {
+          return{
+              errorMsg: msg,
+              errorAlert: true
+          }
+        })
+      }
+    
+      hideErrorAlert = () => {
+        this.setState(prevState => {
+          return{
+            errorMsg: '',
+              errorAlert: false
+          }
+        })
+      }
     
     onChange = (event, selectedDate) => {
         this.setState(prevState => {
@@ -70,7 +91,9 @@ class UtilityForm extends Component {
             mode: 'date',
             show: false,
             billName: '',
-            amount: ''
+            amount: '',
+            errorAlert: false,
+            errorMsg: '',
         })
     }
 
@@ -86,7 +109,7 @@ class UtilityForm extends Component {
             console.log('pass')
         }
         else{
-            alert('Validation error')
+            this.showErrorAlert('Validation Error')
         }
         
     }
@@ -126,6 +149,7 @@ class UtilityForm extends Component {
         }
         return(
             <View style={styles.form}>
+                <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message={this.state.errorMsg} title='Error!'/>
                 <Text style={styles.header}> Add a new bill </Text>
                 <DefaultInput
                     placeholder = 'Enter your bill name'

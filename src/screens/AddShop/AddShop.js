@@ -13,6 +13,7 @@ import validate from '../../utils/validation'
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput'
 import DefaultButton from '../../components/UI/DefaultButton/DefaultButton'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Alerts from '../../components/Alerts/Alerts'
 
 const GOOGLE_PLACES_API_KEY = 'AIzaSyBcs4ko-dTv7DhkZWp0BbcTs0z2nodA4y8'; // never save your real api key in a snack!
 
@@ -22,6 +23,12 @@ Geocoder.init(GOOGLE_PLACES_API_KEY);
 class AddShop extends Component {
 
     state ={
+        errorAlert: false,
+        errorMsg: '',
+        successAlert: false,
+        successMsg: '',
+        infoAlert:false,
+        infoMsg: '',
         modalVisible: false,
         inputLocation: {
           lat: '',
@@ -52,6 +59,61 @@ class AddShop extends Component {
                 },
             }
     }
+
+    showErrorAlert = (msg) => {
+      this.setState(prevState => {
+        return{
+            errorMsg: msg,
+            errorAlert: true
+        }
+      })
+    }
+  
+    hideErrorAlert = () => {
+      this.setState(prevState => {
+        return{
+          errorMsg: '',
+            errorAlert: false
+        }
+      })
+    }
+  
+  showSuccessAlert = (msg) => {
+  this.setState(prevState => {
+      return{
+          successMsg: msg,
+          successAlert: true
+      }
+  })
+  }
+
+  hideSuccessAlert = ()  => {
+  this.setState(prevState => {
+      return{
+          successMsg: '',
+          successAlert: false
+      }
+  })
+  }  
+
+  showInfoAlert = (msg) => {
+      this.setState(prevState => {
+          return{
+              infoMsg: msg,
+              infoAlert: true
+          }
+      })
+      }
+  
+  hideInfoAlert = ()  => {
+  this.setState(prevState => {
+      return{
+          infoMsg: '',
+          infoAlert: false
+      }
+  })
+  }
+
 
     shopNameManualChangedHandler = (val) => {
       this.setState(prevState => {
@@ -129,6 +191,12 @@ class AddShop extends Component {
 
     reset = () => {
         this.setState({
+            errorAlert: false,
+            errorMsg: '',
+            successAlert: false,
+            successMsg: '',
+            infoAlert:false,
+            infoMsg: '',
             modalVisible: false,
             controls: {
                 shopName: {
@@ -185,7 +253,8 @@ class AddShop extends Component {
 
     shopAddedHandler = () => {
         this.props.onAddShop(this.state.controls.shopName.value, this.state.controls.shopDetail.value, this.state.controls.location.value)
-        alert(`You added ${this.state.controls.shopName.value}`)
+        //alert(`You added ${this.state.controls.shopName.value}`)
+        this.showInfoAlert(`You added ${this.state.controls.shopName.value}`)
         this.reset()
         this.locationPicker.reset()
        // this.props.onLoadShops()
@@ -217,6 +286,9 @@ class AddShop extends Component {
   
             
               <ScrollView keyboardShouldPersistTaps='always'>
+                <Alerts alert={this.state.successAlert} onHideAlert={() => this.hideSuccessAlert()} type='success' message={this.state.successMsg} title='Success!'/>
+                <Alerts alert={this.state.errorAlert} onHideAlert={() => this.hideErrorAlert()} type='error' message={this.state.errorMsg} title='Error!'/>
+                <Alerts alert={this.state.infoAlert} onHideAlert={() => this.hideInfoAlert()} type='error' message={this.state.infoMsg} title='Info!'/>
                 <View  style={styles.container}>
                 <Text style={styles.headerTitle}> Add your shop </Text>
                 <View style={styles.placeInputView}>
