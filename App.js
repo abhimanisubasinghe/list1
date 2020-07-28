@@ -5,32 +5,40 @@ import {createStackNavigator} from '@react-navigation/stack'
 import Auth from './src/screens/Auth/Auth'
 import MyDrawer from './src/screens/SideDrawer/SideDrawer'
 import AddProduct from './src/screens/AddProduct/AddProduct'
-
+import SplashScreen from 'react-native-splash-screen';
 
 const RootStack = createStackNavigator();
 
-function App() {
-  return(
-    <NavigationContainer>
-      <RootStack.Navigator headerMode='none'>
-      
-      <RootStack.Screen
-        name='Login'
-        component={Auth}
-        />
-      <RootStack.Screen
-        name='Drawer'
-        component={MyDrawer}
-        />
-      <RootStack.Screen
-        name='ShareProduct'
-        component={AddProduct}
-        />
+class App extends React.Component {
+
+  componentDidMount(){
+    SplashScreen.hide()
+  }
+
+  render(){
+    return(
+      <NavigationContainer>
+        <RootStack.Navigator headerMode='none'>
         
-        
-      </RootStack.Navigator>  
-    </NavigationContainer>  
-  )
+        <RootStack.Screen
+          name='Login'
+          component={Auth}
+          />
+        <RootStack.Screen
+          name='Drawer'
+          component={MyDrawer}
+          />
+        <RootStack.Screen
+          name='ShareProduct'
+          component={AddProduct}
+          />
+          
+          
+        </RootStack.Navigator>  
+      </NavigationContainer>  
+    )
+  }
+  
 }
 
 export default App;
