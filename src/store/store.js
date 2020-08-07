@@ -1,7 +1,6 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import thunk from "redux-thunk"
 
-import placesReducer from './reducers/places';
 import uiReducer from './reducers/ui';
 import authReducer from './reducers/auth';
 import productReducer from './reducers/products';
@@ -11,7 +10,6 @@ import billReducer from './reducers/bills';
 import listReducer from './reducers/lists';
 
 const rootReducer = combineReducers({
-    places: placesReducer,
     ui: uiReducer,
     auth: authReducer,
     products: productReducer,

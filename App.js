@@ -5,15 +5,10 @@ import {createStackNavigator} from '@react-navigation/stack'
 import Auth from './src/screens/Auth/Auth'
 import MyDrawer from './src/screens/SideDrawer/SideDrawer'
 import AddProduct from './src/screens/AddProduct/AddProduct'
-import SplashScreen from 'react-native-splash-screen';
 
 const RootStack = createStackNavigator();
 
 class App extends React.Component {
-
-  componentDidMount(){
-    SplashScreen.hide()
-  }
 
   render(){
     return(
